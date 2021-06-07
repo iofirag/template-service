@@ -1,0 +1,12 @@
+{
+  "server": {
+    "port": {
+      "key": "/configuration/kindermanager/service/port",
+      "defaultValue": "80"
+    }
+  },
+  "test": {
+    "key": "/configuration/kindermanager/service/port",
+    "defaultValue": "test-template-local"
+  }
+}

@@ -1,0 +1,10 @@
+.idea/
+dist/
+*.log
+*.rar
+node_modules/*
+result.xml
+xunit.xml
+sh.exe.stackdump
+bush.exe.stackdump
+config/production.json

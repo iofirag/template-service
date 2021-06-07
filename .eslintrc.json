@@ -1,0 +1,48 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2021": true,
+    "mocha": true
+  },
+  "extends": [
+    "airbnb-base"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12
+  },
+  "rules": {
+    "max-len": ["warn", {"code": 100}],
+    "indent": ["warn", 4],
+    "comma-dangle": "off",
+    "no-underscore-dangle":"off",
+    "quotes": "off",
+    "object-curly-newline": "off",
+    "object-curly-spacing": "warn",
+    "no-unused-vars": "warn",
+    "object-shorthand": "off",
+    "semi": "warn",
+    "arrow-parens": "off",
+    "no-unneeded-ternary":"off",
+    "no-else-return": "off",
+    "consistent-return": "off",
+    "strict": "warn",
+    "no-multi-spaces": "off",
+    "class-methods-use-this": "off",
+    "no-await-in-loop":"off",
+    "arrow-body-style": "off",
+    "no-prototype-builtins":"warn",
+    "eol-last": "off",
+    "prefer-template":"warn",
+    "no-restricted-syntax":"off",
+    "curly": "warn",
+    "no-useless-constructor":"warn",
+    "no-empty-function": "warn",
+    "no-undef":"warn",
+    "no-unused-expressions": "warn",
+    "prefer-destructuring": ["warn", {"object": false, "array": true}],
+    "radix": "off",
+    "no-plusplus":"off",
+    "import/prefer-default-export": "off"
+  }
+}
