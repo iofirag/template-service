@@ -1,3 +1,6 @@
+example service:
+config, probe, server, Dockerfile, logger, eslint, dependency-injection, launch with F5, swagger
+
 unused scripts:  
     "start-manual-prod": "set NODE_ENV=production&& yarn start",
     "build-config": "node --inspect --nolazy services/configCreatorService.js",
