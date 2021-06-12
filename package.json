@@ -5,14 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node --inspect --nolazy index.js",
-    "test-start-like-prod": "set NODE_ENV=production&& node --inspect --nolazy index.js",
-    "nodemon": "nodemon index.js",
+    "test-build-config": "node test/buildConfigTest.js",
     "test": "./node_modules/.bin/mocha --reporter spec ./tests/**/*.js",
     "testx": "./node_modules/.bin/mocha --reporter xunit-file ./tests/**/*.js"
   },
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@godaddy/terminus": "^4.9.0",
     "awilix": "^4.3.4",
     "axios": "^0.21.1",
     "config": "^3.3.6",
@@ -27,7 +27,8 @@
     "opentracing": "^0.14.5",
     "statman-stopwatch": "^2.12.0",
     "swagger-tools": "^0.10.4",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "eslint": "^7.28.0",

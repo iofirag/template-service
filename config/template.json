@@ -1,12 +1,26 @@
 {
-  "server": {
-    "port": {
-      "key": "/configuration/kindermanager/service/port",
-      "defaultValue": "80"
+    "test": {
+        "key": "/configuration/testservice/test",
+        "defaultValue": "test-template-local"
+    },
+    "server": {
+        "port": {
+            "key": "/configuration/testservice/server/port",
+            "defaultValue": "3000"
+        }
+    },
+    "probe": {
+        "key": "/configuration/testservice/probe",
+        "defaultValue": {}
+    },
+    "log": {
+        "level": {
+            "key": "/configuration/testservice/log/level",
+            "defaultValue": "debug"
+        },
+        "_isWriteToHttp": {
+            "key": "/configuration/testservice/log/_isWriteToHttp",
+            "defaultValue": false
+        }
     }
-  },
-  "test": {
-    "key": "/configuration/kindermanager/service/port",
-    "defaultValue": "test-template-local"
-  }
 }

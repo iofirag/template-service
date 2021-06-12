@@ -7,12 +7,11 @@ const fsPromise = fs.promises;
 
 module.exports = class ConfigCreatorService {
     constructor() {
-        process.env.ETCD_HOST = "localhost:2379";
-        process.env.ETCD_KEY_PREFIX = "/environment/stargate/";
-        this.configJson = {};
-        this.managementKeys = ["key", "defaultValue"];
-        this.outputFilePath = "./config/production.json";
-        this.etcdClient = new Etcd([process.env.ETCD_HOST]);
+        this._configJson = {};
+        this._managementKeys = ["key", "defaultValue"];
+        this._outputFilePath = "./config/production.json";
+        this._etcdKeyPrefix = process.env.ETCD_KEY_PREFIX || "";
+        this._etcdClient = new Etcd([process.env.ETCD_HOST]);
     }
 
     async init() {
@@ -22,8 +21,8 @@ module.exports = class ConfigCreatorService {
 
     async saveLocalFile() {
         await fsPromise.writeFile(
-            this.outputFilePath,
-            JSON.stringify(this.configJson, null, 4)
+            this._outputFilePath,
+            JSON.stringify(this._configJson, null, 4)
         );
     }
 
@@ -45,16 +44,16 @@ module.exports = class ConfigCreatorService {
                 if (
                     this.isSameItemsInArrays(
                         Object.keys(obj[field]),
-                        this.managementKeys
+                        this._managementKeys
                     )
                 ) {
                     // value object
                     const configValue = await this.fetchConfigKey(
-                        (process.env.ETCD_KEY_PREFIX || "") + obj[field].key,
+                        this._etcdKeyPrefix + obj[field].key,
                         obj[field].defaultValue
                     );
                     // build key in complete json
-                    _.set(this.configJson, keyTreeCopy.join("."), configValue);
+                    _.set(this._configJson, keyTreeCopy.join("."), configValue);
                 } else {
                     // nested object
                     await this.iterateNestedObject(obj[field], keyTreeCopy);
@@ -66,7 +65,7 @@ module.exports = class ConfigCreatorService {
     async fetchConfigKey(key = "", defaultValue = "") {
         return new Promise((resolve, reject) => {
             // get key from etcd
-            this.etcdClient.get(key, (err, res) => {
+            this._etcdClient.get(key, (err, res) => {
                 let value;
                 if (err) {
                     // Default value
@@ -82,4 +81,4 @@ module.exports = class ConfigCreatorService {
             });
         });
     }
-}
+};

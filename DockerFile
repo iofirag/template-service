@@ -1,0 +1,16 @@
+FROM node:alpine
+
+#
+COPY package*.json /service
+RUN yarn
+#
+
+
+ADD . /service
+
+WORKDIR /service
+
+RUN yarn config set "strict-ssl" false -g
+RUN yarn
+
+CMD yarn start

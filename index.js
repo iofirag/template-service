@@ -1,20 +1,23 @@
-// const app = require("express");
+const app = require("express")();
 // const url = require("url");
-const ConfigCreatorService = require("./services/configCreatorService");
 const ContainerConfig = require("./containerConfig");
 
 (async () => {
-    try {
-        console.log("NODE_ENV=", process.env.NODE_ENV);
-        // build config file using template (etcd keys & default values)
-        const configCreatorService = new ConfigCreatorService();
-        await configCreatorService.init();
+    const container = await ContainerConfig.getInstance();
+    const logger = container.resolve("logger");
+    const probe = container.resolve("probe");
+    const serverConfig = container.resolve("serverConfig");
+    // const testData = container.resolve("test");
 
-        // build dependency injection using configs
-        const container = await ContainerConfig.getInstance();
-        const testData = container.resolve("test");
-        console.log(testData);
+    try {
+        const serverPort = serverConfig ? serverConfig.port : 3008;
+        await probe.start(app, serverPort);
+        logger.log('info', `your server is listening on port ${serverPort} http://`);
+        probe.readyFlag = true;
     } catch (error) {
-        console.error(error);
+        probe.readyFlag = false;
+        probe.liveFlag = false;
+        logger.log('error', `cannot start server ${error}`);
+        probe.addError(error);
     }
 })();
