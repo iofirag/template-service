@@ -109,7 +109,7 @@ module.exports = class Probe {
                     this.addError(error);
                     this._logger.log(
                         "error",
-                        `Error start refael prob server: ${error}`
+                        `Error start prob server: ${error}`
                     );
                     return reject();
                 });
