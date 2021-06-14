@@ -9,18 +9,44 @@
             "defaultValue": "3000"
         }
     },
+    "swagger": {
+        "host": {
+            "key": "/configuration/testservice/swagger/host",
+            "defaultValue": "http://localhost:3000"
+        }
+    },
     "probe": {
         "key": "/configuration/testservice/probe",
         "defaultValue": {}
     },
     "log": {
+        "fields": {
+            "flow": {
+                "key": "/configuration/testservice/log/fields/flow",
+                "defaultValue": "example-service"
+            },
+            "project": {
+                "key": "/configuration/testservice/log/fields/project",
+                "defaultValue": "data-factory"
+            },
+            "env": {
+                "key": "/configuration/testservice/log/fields/env",
+                "defaultValue": "local"
+            }
+        },
+        "connection": {
+            "host": {
+                "key": "/configuration/testservice/log/connection/host",
+                "defaultValue": "localhost"
+            },
+            "port": {
+                "key": "/configuration/testservice/log/connection/port",
+                "defaultValue": "3009"
+            }
+        },
         "level": {
             "key": "/configuration/testservice/log/level",
             "defaultValue": "debug"
-        },
-        "_isWriteToHttp": {
-            "key": "/configuration/testservice/log/_isWriteToHttp",
-            "defaultValue": false
         }
     }
 }

@@ -120,7 +120,7 @@ module.exports.Logger = class Logger {
             }
         }
 
-        if (Object.keys(missingParams).length === 0) {
+        if (Object.keys(missingParams).length !== 0) {
             const message = "logger missing mandatory params";
             throw new Error(`${message} ${JSON.stringify(missingParams)}`);
         }

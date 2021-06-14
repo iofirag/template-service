@@ -1,5 +1,10 @@
 example service:
-config, probe, server, Dockerfile, logger, eslint, dependency-injection, launch with F5, swagger
+config, probe, server, Dockerfile, logger, eslint, dependency-injection, nodemon, launch with F5, swagger-ui, yarn
+
+run local with docker:
+$ docker build -t foo . && docker run -it --env-file test/.env foo
+
+
 
 unused scripts:  
     "start-manual-prod": "set NODE_ENV=production&& yarn start",

@@ -40,14 +40,15 @@ module.exports = class ContainerConfig {
         this.container.register({
             test: Awilix.asValue(config.get("test")),
             loggerConfig: Awilix.asValue(config.get('log')),
-            logger: Awilix.asClass(Logger),
-            serviceData: Awilix.asValue({
-                name: pkgJson.name,
-                version: pkgJson.version,
-                //component: pkgJson.component || pkgJson.name
-            }),
+            swaggerConfig: Awilix.asValue(config.get("swagger")),
             serverConfig: Awilix.asValue(config.get('server')),
             probeConfig: Awilix.asValue(config.get('probe')),
+            serviceData: Awilix.asValue({
+                name: pkgJson.name,
+                component: pkgJson.name,
+                version: pkgJson.version,
+            }),
+            logger: Awilix.asClass(Logger),
             probe: Awilix.asClass(probe)
         });
     }

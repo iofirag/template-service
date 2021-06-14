@@ -1,13 +1,22 @@
 {
-  "test": "test-default-local",
-  "probe": {
-
-  },
-  "server": {
-      "port": "3000"
-  },
-  "log": {
-      "level": "debug",
-      "_isWriteToHttp": false
-  }
+    "test": "test-default-local",
+    "probe": {},
+    "server": {
+        "port": "3000"
+    },
+    "swagger": {
+        "host": "http://localhost:3000"
+    },
+    "log": {
+        "fields": {
+            "flow": "example-service",
+            "project": "data-factory",
+            "env": "local"
+        },
+        "connection": {
+            "host": "localhost",
+            "port": "3001"
+        },
+        "level": "debug"
+    }
 }
