@@ -61,7 +61,7 @@ const ContainerConfig = require("./containerConfig");
 
             // Serve the swagger documents and swagger ui
             app.use(middleware.swaggerUi({
-                apiDocs: `${parsedURL.path}serviceName/api-docs`,
+                apiDocs: `${parsedURL.path}${serviceData.name}/api-docs`,
                 swaggerUi: '/docs'
             }));
 
