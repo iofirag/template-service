@@ -1,39 +1,33 @@
-const winston = require("winston");
+const winston = require('winston');
 
 const { format } = winston;
 const { timestamp, prettyPrint, combine } = format;
 
-module.exports.Logger = class Logger {
+module.exports = class Logger {
     constructor(loggerConfig, serviceData, mandatoryFields = []) {
         this._config = loggerConfig;
         this._serviceData = serviceData;
         this._isWriteToHttp = false;
-        this._mandatoryFields = mandatoryFields.length
-            ? mandatoryFields
-            : [
-                { fields: ["project", "env"] },
-                { serviceData: ["version", "component"] },
-            ];
+        this._mandatoryFields = mandatoryFields.length ? mandatoryFields : [{ fields: ['project', 'env'] }, { serviceData: ['version', 'component'] }];
 
         this.validateConfig();
         const { get, util, has, ...defaultMeta } = this._config;
         this._logger = winston.createLogger({
-            level: this._config.level ? this._config.level : "debug",
+            level: this._config.level ? this._config.level : 'debug',
             format: combine(
                 timestamp(),
                 winston.format.printf((info) => {
                     if (info.extraData !== undefined) {
                         const extraData = info.extraData;
                         if (Object.keys(extraData).length !== 0) {
-                            if (Object.keys(extraData).includes("ex")) {
-                                info["exception"] = extraData["ex"];
-                                delete extraData["ex"];
+                            if (Object.keys(extraData).includes('ex')) {
+                                info['exception'] = extraData['ex'];
+                                delete extraData['ex'];
                             }
                             for (const key in extraData) {
-                                info[`extraData.${key}`] =
-                                    typeof extraData[key] === "object"
-                                        ? JSON.stringify(extraData[key])
-                                        : extraData[key];
+                                if (extraData[key]) {
+                                    info[`extraData.${key}`] = typeof extraData[key] === 'object' ? JSON.stringify(extraData[key]) : extraData[key];
+                                }
                             }
                         }
                         delete info.extendData;
@@ -52,14 +46,9 @@ module.exports.Logger = class Logger {
 
     buildTransporter() {
         const transporters = [];
-        const levelThatCantWriteToConsole = ["error", "warn", "info"];
-        if (
-            this._config.level &&
-            !levelThatCantWriteToConsole.includes(this._config.level)
-        ) {
-            transporters.push(
-                new winston.transports.Console({ timestamp: true })
-            );
+        const levelThatCantWriteToConsole = ['error', 'warn', 'info'];
+        if (this._config.level && !levelThatCantWriteToConsole.includes(this._config.level)) {
+            transporters.push(new winston.transports.Console({ timestamp: true }));
         }
         if (this._isWriteToHttp) {
             transporters.push(
@@ -73,17 +62,17 @@ module.exports.Logger = class Logger {
     }
 
     handleWriteToHttp() {
-        Object.prototype.hasOwnProperty.call(this._config, "_isWriteToHttp")
+        Object.prototype.hasOwnProperty.call(this._config, '_isWriteToHttp')
             ? (() => {
                   if (this._config._isWriteToHttp) {
                       this._mandatoryFields.push({
-                          connection: ["host", "port"],
+                          connection: ['host', 'port'],
                       });
                   } else {
                       this._isWriteToHttp = false;
                   }
               })()
-            : this._mandatoryFields.push({ connection: ["host", "port"] });
+            : this._mandatoryFields.push({ connection: ['host', 'port'] });
     }
 
     validateConfig() {
@@ -104,12 +93,7 @@ module.exports.Logger = class Logger {
                     };
                 } else {
                     this._mandatoryFields[key][paramName].forEach((field) => {
-                        if (
-                            !Object.prototype.hasOwnProperty.call(
-                                config[paramName],
-                                field
-                            )
-                        ) {
+                        if (!Object.prototype.hasOwnProperty.call(config[paramName], field)) {
                             missingFields.push(field);
                         }
                     });
@@ -121,16 +105,16 @@ module.exports.Logger = class Logger {
         }
 
         if (Object.keys(missingParams).length !== 0) {
-            const message = "logger missing mandatory params";
+            const message = 'logger missing mandatory params';
             throw new Error(`${message} ${JSON.stringify(missingParams)}`);
         }
     }
 
     log(level, msg, extraData = {}) {
-        if (extraData.constructor.name === "Span") {
+        if (extraData.constructor.name === 'Span') {
             this._logger.log(level, msg, {});
         } else {
-            if (typeof extraData === "object") {
+            if (typeof extraData === 'object') {
                 this._logger.log(level, msg, { extraData });
             } else {
                 this._logger.log(level, msg, {});

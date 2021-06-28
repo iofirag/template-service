@@ -19,6 +19,10 @@
         "key": "/configuration/testservice/probe",
         "defaultValue": {}
     },
+    "tracer": {
+        "key": "/configuration/testservice/tracer",
+        "defaultValue": {}
+    },
     "log": {
         "fields": {
             "flow": {
@@ -47,6 +51,36 @@
         "level": {
             "key": "/configuration/testservice/log/level",
             "defaultValue": "debug"
+        }
+    },
+    "archive": {
+        "hosts": {
+            "key": "/configuration/testservice/archive/hosts",
+            "defaultValue": [
+                "http://localhost:9200"
+            ]
+        },
+        "apiVersion": {
+            "key": "/configuration/testservice/archive/apiVersion",
+            "defaultValue": "7.3"
+        },
+        "maxRetries": {
+            "key": "/configuration/testservice/archive/maxRetries",
+            "defaultValue": "3"
+        },
+        "requestTimeout": {
+            "key": "/configuration/testservice/archive/requestTimeout",
+            "defaultValue": "120000"
+        },
+        "indexPrefix": {
+            "key": "/configuration/testservice/archive/indexprefix",
+            "defaultValue": "service_prefix"
+        },
+        "entitiesIndex": {
+            "example1": {
+                "key": "/configuration/testservice/archive/entitiesIndex/example1",
+                "defaultValue": "example1"
+            }
         }
     }
 }

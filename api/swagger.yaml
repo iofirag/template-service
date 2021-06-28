@@ -5,14 +5,14 @@ info:
 host: "localhost:3000"
 basePath: "/api/v1"
 paths:
-  /exampleroute:
+  /addexample:
     post:
       tags:
         - "template-service"
         - "group-a"
       description: "example-route"
       x-swagger-router-controller: "exampleRoute"
-      operationId: "exampleController"
+      operationId: "addExample"
       parameters:
         - name: "yourname"
           description: "ther request parameter for yourname"

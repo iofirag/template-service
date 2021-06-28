@@ -1,55 +1,44 @@
 const Awilix = require("awilix");
-const ConfigCreatorService = require("./services/configCreatorService");
-const { Logger } = require('./services/loggerService');
-const probe = require("./services/probeService");
+const config = require("config");
+const Logger = require('./services/loggerService');
+const Probe = require("./services/probeService");
+const Tracer = require("./services/tracerService");
 const pkgJson = require("./package.json");
 
-module.exports = class ContainerConfig {
-    static async getInstance() {
-        if (!this.container) {
-            await this.buildConfig();
-            await this.init();
-        }
-        return this.container;
-    }
+const container = Awilix.createContainer({
+    injectionMode: Awilix.InjectionMode.CLASSIC,
+});
 
-    static async buildConfig() {
-        if (process.env.NODE_ENV) {
-            // integ / production
-            // build config file from etcd using template.json (contains etcd keys & default values)
-            // needs environment variable:
-            // -ETCD_HOST
-            // -ETCD_KEY_PREFIX
-            const configCreatorService = new ConfigCreatorService();
-            await configCreatorService.init();
-        }
-    }
+const ArchiveService = require("./services/archiveService");
 
-    static async init() {
-        // build dependency injection using configs
-        const config = require("config");
-        // load config file dependent on NODE_ENV environment value (''/dev/prod) using 'config' package
-        // execute config.utils.loadFileConfigs() for fix wrong config path
-        // or using conditional import
-        // eslint-disable-next-line global-require
+const Example1Service = require("./controllers/example1/example1Service");
+const Example1Handler = require("./controllers/example1/example1Handler");
+const Example1Archive = require("./controllers/example1/example1Archive");
 
-        this.container = Awilix.createContainer({
-            injectionMode: Awilix.InjectionMode.CLASSIC,
-        });
+container.register({
+    // Values
+    test: Awilix.asValue(config.get("test")),
+    loggerConfig: Awilix.asValue(config.get('log')),
+    swaggerConfig: Awilix.asValue(config.get("swagger")),
+    serverConfig: Awilix.asValue(config.get('server')),
+    probeConfig: Awilix.asValue(config.get('probe')),
+    tracerConfig: Awilix.asValue(config.get('tracer')),
+    archiveConfig: Awilix.asValue(config.get('archive')),
+    serviceData: Awilix.asValue({
+        name: pkgJson.name,
+        component: pkgJson.name,
+        version: pkgJson.version,
+        ts: Date.now()
+    }),
+    // Classes
+    archiveService: Awilix.asClass(ArchiveService).singleton(),
+    example1Service: Awilix.asClass(Example1Service),
+    example1Handler: Awilix.asClass(Example1Handler),
+    example1Archive: Awilix.asClass(Example1Archive),
+    // Vendor classes
+    logger: Awilix.asClass(Logger),
+    probe: Awilix.asClass(Probe),
+    tracer: Awilix.asClass(Tracer),
+});
 
-        this.container.register({
-            test: Awilix.asValue(config.get("test")),
-            loggerConfig: Awilix.asValue(config.get('log')),
-            swaggerConfig: Awilix.asValue(config.get("swagger")),
-            serverConfig: Awilix.asValue(config.get('server')),
-            probeConfig: Awilix.asValue(config.get('probe')),
-            serviceData: Awilix.asValue({
-                name: pkgJson.name,
-                component: pkgJson.name,
-                version: pkgJson.version,
-            }),
-            logger: Awilix.asClass(Logger),
-            probe: Awilix.asClass(probe)
-        });
-    }
-};
+module.exports = container;

@@ -1,6 +1,7 @@
 {
     "test": "test-default-local",
     "probe": {},
+    "tracer": {},
     "server": {
         "port": "3000"
     },
@@ -18,5 +19,15 @@
             "port": "3001"
         },
         "level": "debug"
+    },
+    "archive": {
+        "hosts": ["http://localhost:9200"],
+        "apiVersion": "7.3",
+        "maxRetries": 3,
+        "requestTimeout": 1200000,
+        "indexPrefix": "service_prefix",
+        "entitiesIndex": {
+            "example1": "example1"
+        }
     }
 }

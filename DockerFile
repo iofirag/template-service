@@ -13,4 +13,4 @@ WORKDIR /service
 RUN yarn config set "strict-ssl" false -g
 RUN yarn
 
-CMD yarn start
+CMD yarn build-config-start

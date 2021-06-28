@@ -1,26 +1,26 @@
-const express = require("express");
-const fs = require("fs");
-const jsyaml = require("js-yaml");
-const url = require("url");
-const morgan = require("morgan");
-const cookieParser = require("cookie-parser");
-const swaggerTools = require("swagger-tools");
-const ContainerConfig = require("./containerConfig");
+const express = require('express');
+const fs = require('fs');
+const jsyaml = require('js-yaml');
+const url = require('url');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const swaggerTools = require('swagger-tools');
+const container = require('./containerConfig');
 
 (async () => {
-    const container = await ContainerConfig.getInstance();
-    const logger = container.resolve("logger");
-    const probe = container.resolve("probe");
-    const serverConfig = container.resolve("serverConfig");
-    const swaggerConfig = container.resolve("swaggerConfig");
-    const serviceData = container.resolve("serviceData");
+    const logger = container.resolve('logger');
+    const probe = container.resolve('probe');
+    const serverConfig = container.resolve('serverConfig');
+    const swaggerConfig = container.resolve('swaggerConfig');
+    const serviceData = container.resolve('serviceData');
+    logger.log('info', serviceData);
     const app = express();
 
     try {
         const options = {
             //swaggerUi: '/swagger.json',
             controllers: './routes',
-            useStabs: process.env.NODE_ENV === 'development' // Conditionally turn on stubs (mock mode)
+            useStabs: process.env.NODE_ENV === 'development', // Conditionally turn on stubs (mock mode)
         };
         const spec = fs.readFileSync('./api/swagger.yaml', 'utf8');
         const swaggerDoc = jsyaml.load(spec);
@@ -35,7 +35,7 @@ const ContainerConfig = require("./containerConfig");
         app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
         app.use(cookieParser());
 
-        swaggerTools.initializeMiddleware(swaggerDoc, async middleware => {
+        swaggerTools.initializeMiddleware(swaggerDoc, async (middleware) => {
             // Interpret Swagger resouces and attach metadata to  request - must he first in swagger tools middleware chain
             app.use(middleware.swaggerMetadata());
             app.use(morgan('combined'));
@@ -60,10 +60,12 @@ const ContainerConfig = require("./containerConfig");
             app.use(middleware.swaggerRouter(options));
 
             // Serve the swagger documents and swagger ui
-            app.use(middleware.swaggerUi({
-                apiDocs: `${parsedURL.path}${serviceData.name}/api-docs`,
-                swaggerUi: '/docs'
-            }));
+            app.use(
+                middleware.swaggerUi({
+                    apiDocs: `${parsedURL.path}${serviceData.name}/api-docs`,
+                    swaggerUi: '/docs',
+                })
+            );
 
             // Start the server
             await probe.start(app, serverPort);

@@ -1,6 +1,7 @@
-//const container = ContainerConfig.getInstance();
+const container = require("../containerConfig");
 
-module.exports.exampleController = (req, res, next) => {
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ status: 'example response :)' }));
+const example1Service = container.resolve("example1Service");
+
+module.exports.addExample = (req, res, next) => {
+    example1Service.addExample(req, res);
 };
