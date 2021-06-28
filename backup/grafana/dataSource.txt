@@ -1,0 +1,21 @@
+Data-Sources list:
+------------------
+
+type: Elasticsearch
+name: Elasticsearch
+url: http://elasticsearch:9200/
+Access: Server (default)
+basic auth: true
+user: elastic
+password:
+index name: 
+time field name: timestamp
+version: 7.0
+max concurrent shard requests: 5
+
+
+type: JSON
+name: JSON
+url: http://localhost:3088/health
+Access: Server (default)
+skip tls verify: true
