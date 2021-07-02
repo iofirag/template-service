@@ -10,17 +10,16 @@ module.exports = class Example1Handler {
     }
 
     async addExample(newValue, parentSpan) {
-        let span;
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
             sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
+        const span = this._tracer.startSpan(logObj.prefix, {
+            childOf: parentSpan,
+        });
         try {
-            span = this._tracer.startSpan(logObj.prefix, {
-                childOf: parentSpan,
-            });
             if (!newValue) {
                 throw new Error('empty value');
             }
@@ -37,6 +36,7 @@ module.exports = class Example1Handler {
                 logObj.isError ? span : null,
                 `time: ${logObj.sw.stop() / 1000}`
             );
+            span.finish();
         }
     }
 };

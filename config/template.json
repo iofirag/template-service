@@ -1,7 +1,7 @@
 {
     "test": {
         "key": "/configuration/testservice/test",
-        "defaultValue": "test-template-local"
+        "defaultValue": "generated default-value"
     },
     "server": {
         "port": {

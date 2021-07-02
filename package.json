@@ -8,10 +8,12 @@
     "build-config": "node services/configCreatorService.js",
     "build-config-start": "yarn build-config && yarn start",
     "---------------------test / dev-------------------": "",
-    "test-build-config": "node test/buildConfigTest.js",
     "nodemon": "nodemon index.js",
     "test": "./node_modules/.bin/mocha --reporter spec ./tests/**/*.js",
-    "testx": "./node_modules/.bin/mocha --reporter xunit-file ./tests/**/*.js"
+    "testx": "./node_modules/.bin/mocha --reporter xunit-file ./tests/**/*.js",
+    "test-build-config": "node test/buildConfigTest.js",
+    "test-build-config-prod": "set NODE_ENV=production&& node services/configCreatorService.js",
+    "test-build-config-dev": "set NODE_ENV=development&& node services/configCreatorService.js"
   },
   "license": "MIT",
   "private": true,

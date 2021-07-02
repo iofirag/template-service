@@ -12,15 +12,14 @@ module.exports = class Example1Archive {
     }
 
     async configure(parentSpan) {
-        let span;
         const logObj = {
             prefix: `${this.constructor.name} - ${this.configure.name}`,
             sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
+        const span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
         try {
-            span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
             const mappingBody = {
                 properties: {
                     name: {
@@ -41,19 +40,19 @@ module.exports = class Example1Archive {
                 logObj.isError ? span : null,
                 `time: ${logObj.sw.stop() / 1000}`
             );
+            span.finish();
         }
     }
 
     async addExample(newValue, parentSpan) {
-        let span;
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
             sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
+        const span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
         try {
-            span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
             await this._archiveService._client.index({
                 index: this._index,
                 body: newValue,
