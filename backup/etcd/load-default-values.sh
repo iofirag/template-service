@@ -8,8 +8,8 @@ etcdctl del "*" --from-key=true --endpoints=http://etcd:2380
 ETCD_KEY_VALUE_FILE=$1
 #IFS == internal field separator
 echo "putting default key-value-pairs into etcd"
-while IFS="=" read -r KEY VALUE
+cat $ETCD_KEY_VALUE_FILE | grep -v '^ *#' | while IFS="=" read -r KEY VALUE
 do
     echo insert ${KEY}=${VALUE}
     etcdctl put ${KEY} "${VALUE}" --endpoints=http://etcd:2380
-done < $ETCD_KEY_VALUE_FILE
+done
