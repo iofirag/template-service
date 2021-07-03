@@ -5,7 +5,6 @@ run local with docker:
 $ docker build -t foo . && docker run -it --env-file test/.env foo
 
 
-
 unused scripts:  
     "start-manual-prod": "set NODE_ENV=production&& yarn start",
     "build-config": "node --inspect --nolazy services/configCreatorService.js",
@@ -22,3 +21,6 @@ todo:
 V- tracerService
 V- archiveService
 V- example1Archive
+
+RUN:
+run in bash/sh restart-services.sh
