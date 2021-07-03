@@ -3,6 +3,8 @@ version: '3.9' # optional since v1.27.0
 volumes:
     elasticsearch-data:
         driver: local
+    etcd-data:
+
 
 # networks:
 #   app-tier:
@@ -30,8 +32,8 @@ services:
             - ETCD_INITIAL_ADVERTISE_PEER_URLS=http://localhost:2380
             - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
             - ETCD_INITIAL_CLUSTER=default=http://localhost:2380
-        volumes:
-            - ./.volume/etcd:/bitnami/etcd
+        #volumes:
+            #- ./.volume/etcd:/bitnami/etcd
         ports:
             - 2379:2379
             - 2380:2380
