@@ -16,15 +16,14 @@ module.exports = class ArchiveService {
     }
 
     async createMappingIndexIfNotExist(indexName, typeName, mappingBody, parentSpan) {
-        let span;
         const logObj = {
             prefix: `${this.constructor.name} - ${this.createMappingIndexIfNotExist.name}`,
             sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
+        const span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
         try {
-            span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
             const isIndexExists = this._client.indices.exists({ index: indexName });
             if (!isIndexExists.body) {
                 this._logger.log('info', `${logObj.prefix} index ${indexName} does not exist. creating new index.`);
@@ -48,22 +47,22 @@ module.exports = class ArchiveService {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                logObj.isError ? span : null,
+                span,
                 `time: ${logObj.sw.stop() / 1000}`
             );
+            span.finish();
         }
     }
 
     async createMapping(indexName, typeName, mappingBody, parentSpan) {
-        let span;
         const logObj = {
             prefix: `${this.constructor.name} - ${this.createMapping.name}`,
             sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
+        const span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
         try {
-            span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
             this._logger.log('info', `${logObj.prefix} creating mapping.`);
             await this._client.indices.putMapping({
                 index: indexName,
@@ -78,9 +77,10 @@ module.exports = class ArchiveService {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                logObj.isError ? span : null,
+                span,
                 `time: ${logObj.sw.stop() / 1000}`
             );
+            span.finish();
         }
     }
 };

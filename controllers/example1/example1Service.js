@@ -31,7 +31,7 @@ module.exports = class Example1Service {
             logObj.msg = error.message;
             res.statusCode = 500;
         } finally {
-            this._logger.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, logObj.isError ? span : null, `time: ${logObj.sw.stop()/1000}`);
+            this._logger.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, span, `time: ${logObj.sw.stop()/1000}`);
             res.setHeader('Content-Type', 'application/json');
             res.end(result ? JSON.stringify(result || '') : '');
             span.finish();

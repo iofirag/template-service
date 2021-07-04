@@ -32,12 +32,12 @@ module.exports = class Example1Archive {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;
             logObj.msg = error.message;
-            throw error;
+            //throw error;
         } finally {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                logObj.isError ? span : null,
+                span,
                 `time: ${logObj.sw.stop() / 1000}`
             );
             span.finish();
@@ -67,9 +67,10 @@ module.exports = class Example1Archive {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                logObj.isError ? span : null,
+                span,
                 `time: ${logObj.sw.stop() / 1000}`
             );
+            span.finish();
         }
     }
 };

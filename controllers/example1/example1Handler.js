@@ -33,7 +33,7 @@ module.exports = class Example1Handler {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                logObj.isError ? span : null,
+                span,
                 `time: ${logObj.sw.stop() / 1000}`
             );
             span.finish();
