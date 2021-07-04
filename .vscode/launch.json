@@ -21,6 +21,15 @@
             "program": "${workspaceFolder}\\index.js",
             "runtimeExecutable": "yarn",
             "runtimeArgs": ["build-config"]
+        },
+        {
+            "name": "Launch Build-config-start",
+            "type": "pwa-node",
+            "request": "launch",
+            "skipFiles": ["<node_internals>/**"],
+            "program": "${workspaceFolder}\\index.js",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": ["build-config-start"]
         }
     ]
 }

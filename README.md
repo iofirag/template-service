@@ -15,6 +15,7 @@ unused scripts:
 
 
 todo:
+- run by Dockerfile
 - rabbitmqService
 - docker (port 80)
 - getAll from index

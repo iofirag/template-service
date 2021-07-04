@@ -13,10 +13,15 @@ const container = require('./containerConfig');
     const serverConfig = container.resolve('serverConfig');
     const swaggerConfig = container.resolve('swaggerConfig');
     const serviceData = container.resolve('serviceData');
+    const test = container.resolve('test');
     logger.log('info', serviceData);
+    logger.log('test', test);
+
     const app = express();
 
     try {
+        await container.resolve('example1Archive').configure();
+
         const options = {
             //swaggerUi: '/swagger.json',
             controllers: './routes',
