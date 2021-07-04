@@ -36,7 +36,7 @@ container.register({
     example1Handler: Awilix.asClass(Example1Handler),
     example1Archive: Awilix.asClass(Example1Archive).singleton(),
     // Vendor classes
-    logger: Awilix.asClass(Logger),
+    logger: Awilix.asClass(Logger).singleton(),
     probe: Awilix.asClass(Probe),
     tracer: Awilix.asClass(Tracer),
 });
