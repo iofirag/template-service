@@ -11,7 +11,6 @@ module.exports = class Example1Service {
     }
 
     async addExample(req, res) {
-        let ctx;
         let result;
         const logObj = {
             prefix: `${this.constructor.name} - ${req.swagger.operation.operationId}`,
@@ -19,9 +18,9 @@ module.exports = class Example1Service {
             isError: false,
             msg: 'success',
         };
+        const ctx = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, req.headers);
         const span = ctx ? this._tracer.startSpan(this._serviceData.name, { childOf: ctx }) : this._tracer.startSpan(this._serviceData.name);
         try {
-            ctx = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, req.headers);
             const newValue = req.swagger.params.yourname.value;
             await this._handler.addExample(newValue, span);
             result = newValue;

@@ -31,14 +31,14 @@ container.register({
         ts: Date.now()
     }),
     // Classes
-    archiveService: Awilix.asClass(ArchiveService).singleton(),
     example1Service: Awilix.asClass(Example1Service),
     example1Handler: Awilix.asClass(Example1Handler),
     example1Archive: Awilix.asClass(Example1Archive).singleton(),
     // Vendor classes
+    archiveService: Awilix.asClass(ArchiveService).singleton(),
     logger: Awilix.asClass(Logger).singleton(),
-    probe: Awilix.asClass(Probe),
-    tracer: Awilix.asClass(Tracer),
+    probe: Awilix.asClass(Probe).singleton(),
+    tracer: Awilix.asClass(Tracer).singleton(),
 });
 
 module.exports = container;
