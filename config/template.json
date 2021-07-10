@@ -6,13 +6,13 @@
     "server": {
         "port": {
             "key": "/configuration/testservice/server/port",
-            "defaultValue": "3000"
+            "defaultValue": "3001"
         }
     },
     "swagger": {
         "host": {
             "key": "/configuration/testservice/swagger/host",
-            "defaultValue": "http://localhost:3000"
+            "defaultValue": "http://localhost:3001"
         }
     },
     "probe": {

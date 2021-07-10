@@ -3,10 +3,10 @@
     "probe": {},
     "tracer": {},
     "server": {
-        "port": "3000"
+        "port": "3001"
     },
     "swagger": {
-        "host": "http://localhost:3000"
+        "host": "http://localhost:3001"
     },
     "log": {
         "fields": {

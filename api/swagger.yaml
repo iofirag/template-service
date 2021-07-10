@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: 'example-service'
-host: "localhost:3000"
+host: "localhost:3001"
 basePath: "/api/v1"
 paths:
   /addexample:
