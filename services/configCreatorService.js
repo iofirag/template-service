@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const fs = require('fs');
-const Etcd = require('node-etcd');
+const { Etcd3 } = require('etcd3');
+const Stopwatch = require('statman-stopwatch');
 const templateJson = require('../config/template.json');
 
 const fsPromise = fs.promises;
@@ -10,13 +11,33 @@ class ConfigCreatorService {
         this._configJson = {};
         this._managementKeys = ['key', 'defaultValue'];
         this._outputFilePath = './config/production.json';
-        this._etcdKeyPrefix = process.env.ETCD_KEY_PREFIX || '';
-        this._etcdClient = new Etcd([process.env.ETCD_HOST || 'localhost:2379']);
+        this._etcdKeyPrefix = process.env.ETCD_KEY_PREFIX || '/configuration/testservice';
+        console.log(`ETCD_ADDR=${process.env.ETCD_ADDR}, ETCD_KEY_PREFIX=${process.env.ETCD_KEY_PREFIX}`);
+        this._etcdClient = new Etcd3({
+            hosts: process.env.ETCD_ADDR || ['localhost:2379', 'localhost:2380'],
+        });
+        this._keysMapping = {};
     }
 
     async init() {
-        await this.buildJsonFromTemplate();
-        await this.saveLocalFile();
+        const logObj = {
+            prefix: `${this.constructor.name} - ${this.init.name}`,
+            sw: new Stopwatch(true),
+            isError: false,
+            msg: 'success',
+        };
+        try {
+            this._keysMapping = await this._etcdClient.getAll().prefix('/configuration/testservice/');
+            await this.buildJsonFromTemplate();
+            await this.saveLocalFile();
+        } catch (error) {
+            console.error(error);
+            logObj.isError = true;
+            logObj.msg = error.message;
+            throw error;
+        } finally {
+            console.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, `time: ${logObj.sw.stop() / 1000}`);
+        }
     }
 
     async saveLocalFile() {
@@ -38,8 +59,9 @@ class ConfigCreatorService {
                 keyTreeCopy.push(field);
                 if (this.isSameItemsInArrays(Object.keys(obj[field]), this._managementKeys)) {
                     // value object
-                    const configValue = await this.fetchConfigKey(this._etcdKeyPrefix + obj[field].key, obj[field].defaultValue);
-                    // build key in complete json
+                    const keyWitoutPrefix = obj[field].key.replace(this._etcdKeyPrefix, '');
+                    const configValue = await this.getConfigKey(this._etcdKeyPrefix, keyWitoutPrefix, obj[field].defaultValue);
+                    // write key in result json
                     _.set(this._configJson, keyTreeCopy.join('.'), configValue);
                 } else {
                     // nested object
@@ -49,28 +71,23 @@ class ConfigCreatorService {
         }
     }
 
-    async fetchConfigKey(key = '', defaultValue = '') {
-        return new Promise((resolve, reject) => {
-            // get key from etcd
-            this._etcdClient.get(key, (err, res) => {
-                let value;
-                if (err) {
-                    // Default value
-                    value = defaultValue;
-                } else {
-                    try {
-                        value = JSON.parse(res.node.value);
-                    } catch (error) {
-                        value = res.node.value;
-                    }
-                }
-                resolve(value);
-            });
-        });
+    getConfigKey(prefix, key, defaultValue) {
+        let resValue = defaultValue;
+        const configValue = this._keysMapping[`${prefix}${key}`];
+        if (configValue) {
+            try {
+                resValue = JSON.parse(configValue);
+            } catch (error) {
+                resValue = configValue;
+            }
+        }
+        return resValue;
     }
 }
 
 (async () => {
-    const configCreatorService = new ConfigCreatorService();
-    await configCreatorService.init();
+    setTimeout(async () => {
+        const configCreatorService = new ConfigCreatorService();
+        await configCreatorService.init();
+    }, 1000 * 15);
 })();
