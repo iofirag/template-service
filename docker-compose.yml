@@ -86,9 +86,11 @@ services:
     # ETCD Initializer
     etcd-initializer:
         build:
-            context: ./backup/etcd
-            dockerfile: Etcd-bitnami-initializer.Dockerfile
+            context: ./backup/etcd-initializer-node
+            dockerfile: etcd-initializer-node.Dockerfile
         container_name: etcd-initializer
+        environment:
+            - ETCD_ADDR=http://etcd:2380
         depends_on:
             - etcd
         restart: 'no'

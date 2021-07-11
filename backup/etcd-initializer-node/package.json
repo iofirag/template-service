@@ -1,0 +1,15 @@
+{
+  "name": "etcd-initializer-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "etcd3": "^1.1.0",
+    "line-reader": "^0.4.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
