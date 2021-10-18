@@ -32,7 +32,7 @@ module.exports = class Example1Archive {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;
             logObj.msg = error.message;
-            //throw error;
+            // throw error;
         } finally {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
@@ -53,11 +53,7 @@ module.exports = class Example1Archive {
         };
         const span = this._tracer.startSpan(logObj.prefix, { childOf: parentSpan });
         try {
-            await this._archiveService._client.index({
-                index: this._index,
-                body: newValue,
-                refresh: 'wait_for',
-            });
+            await this._archiveService.saveData()
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;

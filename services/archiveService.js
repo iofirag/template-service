@@ -83,4 +83,23 @@ module.exports = class ArchiveService {
             span.finish();
         }
     }
+
+    async saveNewData() {
+        await this._archiveService._client.index({
+            index: this._index,
+            body: newValue,
+            refresh: 'wait_for',
+        });
+    }
+
+    get() {
+        this._client.get();
+    }
+
+    async query(querySyntax) {
+        //await this._client.query({
+        //    body: querySyntax,
+        //    headers: sdfsdf
+        //})
+    }
 };

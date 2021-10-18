@@ -15,15 +15,15 @@ const container = require('./containerConfig');
     const serviceData = container.resolve('serviceData');
     const test = container.resolve('test');
     logger.log('info', serviceData);
-    logger.log('test', test);
+    logger.log('info', test);
 
     const app = express();
 
     try {
-        await container.resolve('example1Archive').configure();
+        // await container.resolve('example1Archive').configure();
 
         const options = {
-            //swaggerUi: '/swagger.json',
+            // swaggerUi: '/swagger.json',
             controllers: './routes',
             useStabs: process.env.NODE_ENV === 'development', // Conditionally turn on stubs (mock mode)
         };

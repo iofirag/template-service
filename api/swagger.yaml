@@ -14,8 +14,8 @@ paths:
       x-swagger-router-controller: "exampleRoute"
       operationId: "addExample"
       parameters:
-        - name: "yourname"
-          description: "ther request parameter for yourname"
+        - name: "userData"
+          description: "ther request parameter for user data"
           in: body
           required: true
           schema:

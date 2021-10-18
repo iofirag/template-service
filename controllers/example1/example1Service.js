@@ -21,9 +21,9 @@ module.exports = class Example1Service {
         const ctx = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, req.headers);
         const span = ctx ? this._tracer.startSpan(this._serviceData.name, { childOf: ctx }) : this._tracer.startSpan(this._serviceData.name);
         try {
-            const newValue = req.swagger.params.yourname.value;
-            await this._handler.addExample(newValue, span);
-            result = newValue;
+            const userData = req.swagger.params.userData.value;
+            await this._handler.addExample(userData, span);
+            result = userData;
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;

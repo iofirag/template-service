@@ -2,14 +2,15 @@ const opentracing = require('opentracing');
 const Stopwatch = require('statman-stopwatch');
 
 module.exports = class Example1Handler {
-    constructor(example1Archive, logger, tracer, serviceData) {
+    constructor(example1Archive, logger, tracer, serviceData, queueService) {
         this._archive = example1Archive;
         this._logger = logger;
         this._tracer = tracer;
         this._serviceData = serviceData;
+        this._queueService = queueService;
     }
 
-    async addExample(newValue, parentSpan) {
+    async addExample(userData, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
             sw: new Stopwatch(true),
@@ -20,10 +21,11 @@ module.exports = class Example1Handler {
             childOf: parentSpan,
         });
         try {
-            if (!newValue) {
+            if (!userData) {
                 throw new Error('empty value');
             }
-            await this._archive.addExample(newValue, span);
+            await this._queueService.sendMessage(userData);
+            // await this._archive.addExample(userData, span);
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;

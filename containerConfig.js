@@ -5,16 +5,16 @@ const Probe = require("./services/probeService");
 const Tracer = require("./services/tracerService");
 const pkgJson = require("./package.json");
 
-const container = Awilix.createContainer({
-    injectionMode: Awilix.InjectionMode.CLASSIC,
-});
-
+const RabbitMqService = require("./services/rabbitmqService");
 const ArchiveService = require("./services/archiveService");
 
 const Example1Service = require("./controllers/example1/example1Service");
 const Example1Handler = require("./controllers/example1/example1Handler");
 const Example1Archive = require("./controllers/example1/example1Archive");
 
+const container = Awilix.createContainer({
+    injectionMode: Awilix.InjectionMode.CLASSIC,
+});
 container.register({
     // Values
     test: Awilix.asValue(config.get("test")),
@@ -36,6 +36,7 @@ container.register({
     example1Archive: Awilix.asClass(Example1Archive).singleton(),
     // Vendor classes
     archiveService: Awilix.asClass(ArchiveService).singleton(),
+    queueService: Awilix.asClass(RabbitMqService).singleton(),
     logger: Awilix.asClass(Logger).singleton(),
     probe: Awilix.asClass(Probe).singleton(),
     tracer: Awilix.asClass(Tracer).singleton(),
