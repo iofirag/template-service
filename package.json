@@ -33,6 +33,7 @@
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
+    "node-etcd": "^7.0.0",
     "opentracing": "^0.14.5",
     "statman-stopwatch": "^2.12.0",
     "swagger-tools": "^0.10.4",

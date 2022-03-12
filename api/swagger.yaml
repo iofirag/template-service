@@ -11,7 +11,7 @@ paths:
         - "template-service"
         - "group-a"
       description: "example-route"
-      x-swagger-router-controller: "exampleRoute"
+      x-swagger-router-controller: "example1Controller"
       operationId: "addExample"
       parameters:
         - name: "userData"

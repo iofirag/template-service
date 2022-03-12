@@ -24,7 +24,7 @@ const container = require('./containerConfig');
 
         const options = {
             // swaggerUi: '/swagger.json',
-            controllers: './routes',
+            controllers: './controllers',
             useStabs: process.env.NODE_ENV === 'development', // Conditionally turn on stubs (mock mode)
         };
         const spec = fs.readFileSync('./api/swagger.yaml', 'utf8');
