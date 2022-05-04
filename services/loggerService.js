@@ -4,8 +4,8 @@ const { format } = winston;
 const { timestamp, prettyPrint, combine } = format;
 
 module.exports = class Logger {
-    constructor(loggerConfig, serviceData, mandatoryFields = []) {
-        this._config = loggerConfig;
+    constructor(config, serviceData, mandatoryFields = []) {
+        this._config = config;
         this._serviceData = serviceData;
         this._isWriteToHttp = false;
         this._mandatoryFields = mandatoryFields.length ? mandatoryFields : [{ fields: ['project', 'env'] }, { serviceData: ['version', 'component'] }];

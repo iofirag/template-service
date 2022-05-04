@@ -1,7 +1,7 @@
 const opentracing = require('opentracing');
 const Stopwatch = require('statman-stopwatch');
 
-module.exports = class Example1Archive {
+module.exports = class Example1DAL {
     constructor(archiveService, archiveConfig, logger, tracer, serviceData) {
         this._archiveService = archiveService;
         this._config = archiveConfig;

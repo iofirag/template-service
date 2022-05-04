@@ -1,13 +1,13 @@
 {
-    "test": "local value",
-    "probe": {},
-    "tracer": {},
+    "source": "local value",
     "server": {
         "port": "3001"
     },
     "swagger": {
         "host": "http://localhost:3001"
     },
+    "probe": {},
+    "tracer": {},
     "log": {
         "fields": {
             "flow": "example-service",
@@ -19,6 +19,18 @@
             "port": "3001"
         },
         "level": "debug"
+    },
+    "http": {},
+    "api": {
+        "tmdb": {
+            "host": "https://api.themoviedb.org",
+            "host2": "https://www.themoviedb.org",
+            "basePath": "/3",
+            "apiKey": "ac505a02032a33d65dd28b41f72182e1",
+            "getSearchMulti": "/search/multi",
+            "getPersonCombinedCredits": "/combined_credits",
+            "getMovieCredits": "/credits"
+        }
     },
     "archive": {
         "hosts": ["http://localhost:9200"],

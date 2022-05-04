@@ -6,15 +6,15 @@ const templateJson = require('../config/template.json');
 
 const fsPromise = fs.promises;
 
-class ConfigCreatorService {
+module.exports = class ConfigCreatorService {
     constructor() {
         this._configJson = {};
         this._managementKeys = ['key', 'defaultValue'];
         this._outputFilePath = './config/production.json';
         this._etcdKeyPrefix = process.env.ETCD_KEY_PREFIX || '/configuration/testservice';
-        console.log(`ETCD_ADDR=${process.env.ETCD_ADDR}, ETCD_KEY_PREFIX=${process.env.ETCD_KEY_PREFIX}`);
+        console.log(`ETCD_HOST=${process.env.ETCD_HOST}, ETCD_KEY_PREFIX=${process.env.ETCD_KEY_PREFIX}`);
         this._etcdClient = new Etcd3({
-            hosts: process.env.ETCD_ADDR || ['localhost:2379', 'localhost:2380'],
+            hosts: process.env.ETCD_HOST || ['localhost:2379', 'localhost:2380'],
         });
         this._keysMapping = {};
     }
@@ -27,9 +27,14 @@ class ConfigCreatorService {
             msg: 'success',
         };
         try {
-            this._keysMapping = await this._etcdClient.getAll().prefix('/configuration/testservice/');
-            await this.buildJsonFromTemplate();
-            await this.saveLocalFile();
+            try {
+                this._keysMapping = await this._etcdClient.getAll().prefix('/configuration/testservice/');
+            } catch (error) {
+                this._keysMapping = {};
+            } finally {
+                await this.buildJsonFromTemplate();
+                await this.saveLocalFile();
+            }
         } catch (error) {
             console.error(error);
             logObj.isError = true;
@@ -40,12 +45,12 @@ class ConfigCreatorService {
         }
     }
 
-    async saveLocalFile() {
-        await fsPromise.writeFile(this._outputFilePath, JSON.stringify(this._configJson, null, 4));
-    }
-
     async buildJsonFromTemplate() {
         await this.iterateNestedObject(templateJson);
+    }
+
+    async saveLocalFile() {
+        await fsPromise.writeFile(this._outputFilePath, JSON.stringify(this._configJson, null, 4));
     }
 
     isSameItemsInArrays(arr1, arr2) {
@@ -83,11 +88,4 @@ class ConfigCreatorService {
         }
         return resValue;
     }
-}
-
-(async () => {
-    setTimeout(async () => {
-        const configCreatorService = new ConfigCreatorService();
-        await configCreatorService.init();
-    }, 1000 * 15);
-})();
+};

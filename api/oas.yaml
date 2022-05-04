@@ -1,9 +1,10 @@
-swagger: "2.0"
+openapi: "3.0.0"
 info:
   version: "1.0.0"
   title: 'example-service'
-host: "localhost:3001"
-basePath: "/api/v1"
+servers:
+  - url: /api/v1
+  - url: example-service/api/v1
 paths:
   /addexample:
     post:
@@ -11,7 +12,7 @@ paths:
         - "template-service"
         - "group-a"
       description: "example-route"
-      x-swagger-router-controller: "exampleRoute"
+      x-swagger-router-controller: "example1RouteController"
       operationId: "addExample"
       parameters:
         - name: "userData"

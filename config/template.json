@@ -1,7 +1,7 @@
 {
-    "test": {
+    "source": {
         "key": "/configuration/testservice/test",
-        "defaultValue": "generated default-value"
+        "defaultValue": "auto generated default value"
     },
     "server": {
         "port": {
@@ -52,6 +52,14 @@
             "key": "/configuration/testservice/log/level",
             "defaultValue": "debug"
         }
+    },
+    "http": {
+        "key": "/configuration/testservice/http",
+        "defaultValue": {}
+    },
+    "api": {
+        "key": "/configuration/testservice/api",
+        "defaultValue": {}
     },
     "archive": {
         "hosts": {

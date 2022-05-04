@@ -2,10 +2,10 @@ const initJaegerTracer = require('jaeger-client').initTracer;
 const opentracing = require('opentracing');
 
 module.exports = class Tracer {
-    constructor(tracerConfig, logger, serviceData) {
+    constructor(config, logger, serviceData) {
         this._serviceData = serviceData;
         this._logger = logger;
-        const config = {
+        const jaegerConfig = {
             serviceName: this._serviceData.name,
             sampler: {
                 type: 'const',
@@ -13,13 +13,13 @@ module.exports = class Tracer {
             },
             reporter: {
                 logSpans: true,
-                agentHost: tracerConfig.agentHost || 'localhost',
-                agentPort: tracerConfig.agentPort || 6832,
+                agentHost: config.agentHost || 'localhost',
+                agentPort: config.agentPort || 6832,
                 collectorEndpoint: 'http://jaegercollector:14268/api/traces',
             },
         };
         const options = {};
-        this.tracer = initJaegerTracer(config, options);
+        this.tracer = initJaegerTracer(jaegerConfig, options);
         this.tracer.initSpan = this.initSpan;
         this.tracer.initFollowsFromSpan = this.initFollowsFromSpan;
         this.tracer.extractFromSpanTags = this.extractFromSpanTags;

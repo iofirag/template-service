@@ -2,8 +2,8 @@ const { createTerminus, HealthCheckError } = require("@godaddy/terminus");
 const http = require("http");
 
 module.exports = class Probe {
-    constructor(probeConfig, logger) {
-        this._config = probeConfig;
+    constructor(config, logger) {
+        this._config = config;
         this._logger = logger;
         this._readyFlag = false;
         this._liveFlag = true;
