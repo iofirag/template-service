@@ -9,6 +9,7 @@ config, probe, server, Dockerfile, logger, eslint, dependency-injection, nodemon
 - http-service
 - rabbitmq-service
 - redis-service
+- test/container-config
 
 <!-- run local with docker: -->
 <!-- $ docker build -t foo . && docker run -it --env-file test/.env foo -->
