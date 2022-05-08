@@ -241,7 +241,7 @@ module.exports = class Logger {
     //     this.log('warn', logMsg, extraData);
     // }
 
-    // logError(className, functionName, error = {}, extraData = {}) {
+    // logFail(className, functionName, error = {}, extraData = {}) {
     //     const logMsg = this.logMsgBuilder(className, functionName, LogTypeEnum.Fail, extraData);
     //     this.log('error', logMsg, { ...extraData, ex: JSON.stringify(error) });
     // }

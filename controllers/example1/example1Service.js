@@ -18,7 +18,7 @@ module.exports = class Example1Service {
         const ctx = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, req.headers);
         const span = ctx ? this._tracer.startSpan(this._serviceData.name, { childOf: ctx }) : this._tracer.startSpan(this._serviceData.name);
         try {
-            const userData = req.swagger.params.userData.value;
+            const userData = req.params.userData;
             await this._handler.addExample(userData, span);
             result = userData;
         } catch (error) {
@@ -27,7 +27,7 @@ module.exports = class Example1Service {
             logObj.msg = error.message;
             res.statusCode = 500;
         } finally {
-            this._logger.logV3(logObj.isError ? 'error' : 'info', this.constructor.name, req.openapi.schema.operationId, logObj.msg);
+            this._logger.logV2(logObj.isError ? 'error' : 'info', this.constructor.name, req.openapi.schema.operationId, logObj.msg);
             res.setHeader('Content-Type', 'application/json');
             res.end(result ? JSON.stringify(result) : '');
             span.finish();
