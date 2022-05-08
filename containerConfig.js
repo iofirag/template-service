@@ -29,11 +29,11 @@ container.register({
     }),
     // Classes
     example1Service: Awilix.asClass(Example1Service),
-    example1Handler: Awilix.asClass(Example1Logic),
-    example1Archive: Awilix.asClass(Example1Data).singleton(),
+    example1Logic: Awilix.asClass(Example1Logic),
+    example1Data: Awilix.asClass(Example1Data).inject(() => ({ archiveConfig: config.get('archive') })).singleton(),
     // Vendor classes
-    archiveService: Awilix.asClass(ArchiveService).singleton(),
-    queueService: Awilix.asClass(RabbitMqService).singleton(),
+    archiveService: Awilix.asClass(ArchiveService).inject(() => ({ config: config.get('archive') })).singleton(),
+    queueService: Awilix.asClass(RabbitMqService).inject(() => ({ config: config.get('queue') })).singleton(),
     httpService: Awilix.asClass(HttpService).inject(() => ({ config: config.get('http') })).singleton(),
     logger: Awilix.asClass(Logger).inject(() => ({ config: config.get('log') })).singleton(),
     probe: Awilix.asClass(Probe).inject(() => ({ config: config.get('probe') })).singleton(),

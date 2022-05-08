@@ -14,13 +14,6 @@ paths:
       description: "example-route"
       x-swagger-router-controller: "example1RouteController"
       operationId: "addExample"
-      parameters:
-        - name: "userData"
-          description: "ther request parameter for user data"
-          in: body
-          required: true
-          schema:
-            $ref: '#/definitions/example'
       responses:
         200:
           description: "name ok"
@@ -28,12 +21,3 @@ paths:
           description: "bad name"
         500:
           description: "server error"
-
-definitions:
-  example:
-    type: "object"
-    required:
-      - "yourname"
-    properties:
-      yourname:
-        type: "string"

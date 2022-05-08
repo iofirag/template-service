@@ -1,20 +1,17 @@
 const opentracing = require("opentracing");
-const Stopwatch = require('statman-stopwatch');
-
 
 module.exports = class Example1Service {
-    constructor(example1Handler, logger, tracer, serviceData) {
-        this._handler = example1Handler;
+    constructor(example1Logic, logger, tracer, serviceData) {
+        this._handler = example1Logic;
         this._logger = logger;
         this._tracer = tracer;
         this._serviceData = serviceData;
     }
 
     async addExample(req, res) {
+        this._logger.logV2('info', this.constructor.name, req.openapi.schema.operationId, 'start');
         let result;
         const logObj = {
-            prefix: `${this.constructor.name} - ${req.swagger.operation.operationId}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -30,9 +27,9 @@ module.exports = class Example1Service {
             logObj.msg = error.message;
             res.statusCode = 500;
         } finally {
-            this._logger.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, span, `time: ${logObj.sw.stop()/1000}`);
+            this._logger.logV3(logObj.isError ? 'error' : 'info', this.constructor.name, req.openapi.schema.operationId, logObj.msg);
             res.setHeader('Content-Type', 'application/json');
-            res.end(result ? JSON.stringify(result || '') : '');
+            res.end(result ? JSON.stringify(result) : '');
             span.finish();
         }
     }

@@ -1,9 +1,8 @@
 const opentracing = require('opentracing');
-const Stopwatch = require('statman-stopwatch');
 
-module.exports = class Example1BL {
-    constructor(example1Archive, logger, tracer, serviceData, queueService) {
-        this._archive = example1Archive;
+module.exports = class Example1Logic {
+    constructor(example1Data, logger, tracer, serviceData, queueService) {
+        this._archive = example1Data;
         this._logger = logger;
         this._tracer = tracer;
         this._serviceData = serviceData;
@@ -13,7 +12,6 @@ module.exports = class Example1BL {
     async addExample(userData, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -35,8 +33,7 @@ module.exports = class Example1BL {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }

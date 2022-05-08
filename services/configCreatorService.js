@@ -1,7 +1,6 @@
 const _ = require('lodash');
 const fs = require('fs');
 const { Etcd3 } = require('etcd3');
-const Stopwatch = require('statman-stopwatch');
 const templateJson = require('../config/template.json');
 
 const fsPromise = fs.promises;
@@ -22,7 +21,6 @@ module.exports = class ConfigCreatorService {
     async init() {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.init.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -41,7 +39,7 @@ module.exports = class ConfigCreatorService {
             logObj.msg = error.message;
             throw error;
         } finally {
-            console.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, `time: ${logObj.sw.stop() / 1000}`);
+            console.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`);
         }
     }
 

@@ -1,20 +1,18 @@
 const opentracing = require('opentracing');
-const Stopwatch = require('statman-stopwatch');
 
-module.exports = class Example1DAL {
+module.exports = class Example1Data {
     constructor(archiveService, archiveConfig, logger, tracer, serviceData) {
         this._archiveService = archiveService;
-        this._config = archiveConfig;
+        this._archiveConfig = archiveConfig;
         this._logger = logger;
         this._tracer = tracer;
         this._serviceData = serviceData;
-        this._index = `${this._config.indexPrefix}-${this._config.entitiesIndex.example1}`;
+        this._index = `${this._archiveConfig.indexPrefix}-${this._archiveConfig.entitiesIndex.example1}`;
     }
 
     async configure(parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.configure.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -37,8 +35,7 @@ module.exports = class Example1DAL {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }
@@ -47,7 +44,6 @@ module.exports = class Example1DAL {
     async addExample(newValue, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -63,8 +59,7 @@ module.exports = class Example1DAL {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }

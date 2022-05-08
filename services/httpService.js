@@ -1,57 +1,41 @@
 const axios = require('axios');
+const axiosRetry = require('axios-retry');
+const opentracing = require("opentracing");
 
 module.exports = class HttpService {
-    constructor(config, logger, tracer) {
+    constructor(baseURL, retryFunction, config, tracer) {
         this._config = config;
-        this._logger = logger;
         this._tracer = tracer;
+        axiosRetry(axios, {
+            retries: this._config.retries,
+            retryCondition: retryFunction,
+        });
+        this._client = axios.create({ baseURL, ...this._config.axiosOptions });
     }
 
-    async get(url, config = {}) {
-        const requstObj = {
-            ...config,
-            method: 'GET',
-            url,
-        };
-        return this.request(requstObj);
+    async request(method, pathName, headers = {}, data = {}, span) {
+        const headersWithTracing = this.getHeadersWithTracing(span, headers);
+        return this._client.request({ url: pathName, method, headersWithTracing, data });
     }
 
-    async post(url, data = {}, config = {}) {
-        const requstObj = {
-            ...config,
-            method: 'POST',
-            url,
-            data,
-        };
-        return this.request(requstObj);
+    async get({ pathName, headers, params }, span) {
+        return this.request('GET', pathName, headers, params, span);
     }
 
-    async put(url, data = {}, config = {}) {
-        const requstObj = {
-            ...config,
-            method: 'PUT',
-            url,
-            data,
-        };
-        return this.request(requstObj);
+    async post({ pathName, headers, body }, span) {
+        return this.request('POST', pathName, headers, body, span);
     }
 
-    async delete(url, config = {}) {
-        const requstObj = {
-            ...config,
-            method: 'DELETE',
-            url
-        };
-        return this.request(requstObj);
+    async put({ pathName, headers, body }, span) {
+        return this.request('PUT', pathName, headers, body, span);
     }
 
-    async request(config) {
-        try {
-            const res = await axios.request(config);
-            return res.data;
-        } catch (error) {
-            this._logger.log('error', `${this.constructor.name} - ${this.request.name} failed. error: ${error.message}`);
-            throw error;
-        }
+    async delete({ pathName, headers, body }, span) {
+        return this.request('DELETE', pathName, headers, body, span);
+    }
+
+    getHeadersWithTracing(span, headers) {
+        this._tracer.inject(span.context(), opentracing.FORMAT_HTTP_HEADERS, headers);
+        return headers;
     }
 };

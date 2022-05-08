@@ -90,5 +90,9 @@
                 "defaultValue": "example1"
             }
         }
+    },
+    "queue": {
+        "key": "/configuration/testservice/queue",
+        "defaultValue": {}
     }
 }

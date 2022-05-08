@@ -3,9 +3,8 @@ const amqp = require('amqplib');
 const opentracing = require('opentracing');
 
 module.exports = class RabbitMq {
-    constructor(config, serviceData, logger, tracer) {
+    constructor(config, logger, tracer) {
         this._config = config;
-        this._serviceData = serviceData;
         this._logger = logger;
         this._tracer = tracer;
     }
@@ -14,16 +13,20 @@ module.exports = class RabbitMq {
         let span;
         try {
             span = this._tracer.startSpan(`${this.constructor.name} - ${this.start.name}`, { childOf: parentSpan });
-            const connection = await amqp.connect(this._config.url);
-            await this.buildQueueMap(connection, this._config.queueMap);
-
+            this._logger.logV2('start', RabbitMq.name, this.start.name)
+            const connection = await amqp.connect(this._config.url, { timeout: this._config.timeout || 10000 });
+            // create publish
+            await this.initPublishChaneel(connection)
+            // Build consume map
+            await this.buildConsumeMap(connection, this._config.consumeList);
             // Catch connection errors
             connection.on('error', (error) => {
                 this._logger.log('error', `${this.constructor.name} - ${this.start.name} failed. connection error: ${error.message}`);
                 throw error;
             });
+            this._logger.logV2('success', RabbitMq.name, this.start.name)
         } catch (error) {
-            this._logger.log('error', `${this.constructor.name} - ${this.start.name} failed. error: ${error.message}`);
+            this._logger.logV2('error', this.constructor.name, this.start.name, error);
             span.setTag(opentracing.Tags.ERROR, true);
             throw error;
         } finally {
