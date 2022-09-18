@@ -11,30 +11,66 @@ paths:
     post:
       tags:
         - "template-service"
-#         - "group-a"
       description: "example-route"
-      # x-swagger-router-controller: "example1Controller"
       operationId: addExample
-      # parameters:
-      #   - name: "userData"
-      #     description: "ther request parameter for user data"
-      #     in: body
-      #     required: true
-      #     schema:
-      #       $ref: '#/definitions/example'
+      parameters:
+        - $ref: '#/components/parameters/ExampleProp'
+      requestBody:
+        $ref: '#/components/requestBodies/ExampleBody'
       responses:
-        '200':
-          description: "name ok"
-        # 400:
-        #   description: "bad name"
-        # 500:
-        #   description: "server error"
+        200:
+          $ref: '#/components/responses/ExampleSuccessResponse'
+        400:
+          $ref: '#/components/responses/ExampleBadResponse'
+        500:
+          $ref: '#/components/responses/ExampleBadResponse'
 
-# definitions:
-#   example:
-#     type: "object"
-#     required:
-#       - "yourname"
-#     properties:
-#       yourname:
-#         type: "string"
+components:
+  requestBodies:
+    ExampleBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExampleBody'
+            
+  responses:
+    ExampleSuccessResponse:
+      description: "OK"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExampleResponse'
+    ExampleBadResponse:
+      description: "KO"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExampleResponse'
+
+  parameters:
+    ExampleProp:
+      name: ExampleProp
+      description: example parameter
+      in: header
+      required: true
+      schema:
+        $ref: '#/components/schemas/ExampleProp'
+
+  schemas:
+    ExampleProp:
+      description: 'your name'
+      type: "string"
+      
+    ExampleResponse:
+      type: object
+
+    ExampleBody:
+      type: "object"
+      required:
+        - yourname
+      properties:
+        yourname:
+          type: "string"
+
+## edit with https://editor.swagger.io/

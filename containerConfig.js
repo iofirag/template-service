@@ -9,9 +9,9 @@ const pkgJson = require("./package.json");
 const RabbitMqService = require("./services/rabbitmqService");
 const ArchiveService = require("./services/archiveService");
 
-const Example1Service = require("./controllers/example1/example1Service");
-const Example1Logic = require("./controllers/example1/example1Logic");
-const Example1Data = require("./controllers/example1/example1Data");
+const Example1Service = require("./features/example1/example1Service");
+const Example1Logic = require("./features/example1/example1Logic");
+const Example1Data = require("./features/example1/example1Data");
 
 const container = Awilix.createContainer({
     injectionMode: Awilix.InjectionMode.CLASSIC,
