@@ -19,17 +19,17 @@ const container = Awilix.createContainer({
 container.register({
     // Values
     source: Awilix.asValue(config.get("source")),
+    loggerConfig: Awilix.asValue(config.get('log')),
     swaggerConfig: Awilix.asValue(config.get("swagger")),
     serverConfig: Awilix.asValue(config.get('server')),
     serviceData: Awilix.asValue({
         name: pkgJson.name,
         component: pkgJson.name,
-        version: pkgJson.version,
-        ts: Date.now()
+        version: pkgJson.version
     }),
     // Classes
-    example1Service: Awilix.asClass(Example1Service),
-    example1Logic: Awilix.asClass(Example1Logic),
+    example1Service: Awilix.asClass(Example1Service).singleton(),
+    example1Logic: Awilix.asClass(Example1Logic).singleton(),
     example1Data: Awilix.asClass(Example1Data).inject(() => ({ archiveConfig: config.get('archive') })).singleton(),
     // Vendor classes
     archiveService: Awilix.asClass(ArchiveService).inject(() => ({ config: config.get('archive') })).singleton(),

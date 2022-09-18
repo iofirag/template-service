@@ -22,7 +22,7 @@ module.exports = class Example1Logic {
             if (!userData) {
                 throw new Error('empty value');
             }
-            await this._queueService.sendMessage(userData);
+            // await this._queueService.sendMessage(userData);
             // await this._archive.addExample(userData, span);
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
