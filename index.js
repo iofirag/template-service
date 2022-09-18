@@ -16,6 +16,7 @@ const app = express();
     const logger = container.resolve('logger');
     const probe = container.resolve('probe');
     const source = container.resolve('source');
+    const oasFile = yaml.load(fs.readFileSync('api/oas.yaml', 'utf8'));
 
     logger.log('info', serviceData);
     logger.log('info', source);
@@ -26,22 +27,21 @@ const app = express();
         app.use(cors());
         app.use(cookieParser());
         app.use(morgan('combined'));
-        app.use(express.json({ limit: '50mb' })); // for parsing application/json
-        app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-        app.use((req, res, next) => {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, UseCamelCase, x-clientid, Authorization');
-            if (req.method === 'OPTIONS') {
-                res.statusCode = 200;
-                res.end();
-            } else {
-                next();
-            }
-            // Check for token here (optional)
-        });
-        const oasFile = yaml.load(fs.readFileSync('api/oas.yaml', 'utf8'));
+        app.use(express.json({ limit: '50mb' }));
+        app.use(express.urlencoded({ extended: true }));
         app.get("/api-docs", (req, res) => res.json(oasFile));
+        // app.use((req, res, next) => {
+        //     res.setHeader('Access-Control-Allow-Origin', '*');
+        //     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+        //     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, UseCamelCase, x-clientid, Authorization');
+        //     if (req.method === 'OPTIONS') {
+        //         res.statusCode = 200;
+        //         res.end();
+        //     } else {
+        //         next();
+        //     }
+        //     // Check for token here (optional)
+        // });
 
         const config = {
             oasFile: './api/oas.yaml',
@@ -52,10 +52,8 @@ const app = express();
                 router: {
                     controllers: './controllers',
                 },
-                swagger: {
-                    url: "./api-docs/oas.yaml",
-                },
                 // security: {
+                //     // disable: false,
                 //     auth: {
                 //         apiKey: (token) => {
                 //             console.log('ApiKey security handler', token)
@@ -64,7 +62,7 @@ const app = express();
                 // }
             }
         };
-        await oasTools.initialize(app, config)
+        await oasTools.initialize(app, config);
 
         // Start the server
         await probe.start(app, serverPort);

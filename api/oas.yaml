@@ -7,8 +7,8 @@ servers:
   - url: example-service/api/v1
 paths:
   /addexample:
+    x-router-controller: example1Controller
     post:
-      x-router-controller: example1Controller
       operationId: addExample
       tags:
         - "template-service"
@@ -59,18 +59,12 @@ components:
 
   schemas:
     ExampleProp:
-      description: 'prop value'
-      type: "string"
+      type: string
       
     ExampleResponse:
       type: object
 
     ExampleBody:
-      type: "object"
-      required:
-        - yourname
-      properties:
-        yourname:
-          type: "string"
+      type: object
 
 ## edit with https://editor.swagger.io/
