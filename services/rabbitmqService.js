@@ -3,9 +3,11 @@ const amqp = require('amqplib');
 const opentracing = require('opentracing');
 
 module.exports = class RabbitMq {
-    constructor(config, serviceData, logger, tracer) {
+    constructor(config, logger, tracer) {
         this._config = config;
-        this._serviceData = serviceData;
+        this._consumeMap = {};
+        this._publishChannel = null;
+        this._unRetryableErrors = config.unRetryableErrors;
         this._logger = logger;
         this._tracer = tracer;
     }
@@ -14,16 +16,20 @@ module.exports = class RabbitMq {
         let span;
         try {
             span = this._tracer.startSpan(`${this.constructor.name} - ${this.start.name}`, { childOf: parentSpan });
-            const connection = await amqp.connect(this._config.url);
-            await this.buildQueueMap(connection, this._config.queueMap);
-
+            this._logger.logV2('start', RabbitMq.name, this.start.name);
+            const connection = await amqp.connect(this._config.url, { timeout: this._config.timeout || 10000 });
+            // create publish
+            await this.initPublishChaneel(connection);
+            // Build consume map
+            await this.buildConsumeMap(connection, this._config.consumeList);
             // Catch connection errors
             connection.on('error', (error) => {
                 this._logger.log('error', `${this.constructor.name} - ${this.start.name} failed. connection error: ${error.message}`);
                 throw error;
             });
+            this._logger.logV2('success', RabbitMq.name, this.start.name);
         } catch (error) {
-            this._logger.log('error', `${this.constructor.name} - ${this.start.name} failed. error: ${error.message}`);
+            this._logger.logV2('error', this.constructor.name, this.start.name, error);
             span.setTag(opentracing.Tags.ERROR, true);
             throw error;
         } finally {
@@ -31,12 +37,7 @@ module.exports = class RabbitMq {
         }
     }
 
-    async buildQueueMap(connection, queueMap) {
-        await this.buildFromConsumeList(connection, queueMap.consumeList);
-        await this.buildFromPublishMap(connection, queueMap.publishMap);
-    }
-
-    async buildFromConsumeList(connection, consumeList = []) {
+    async buildConsumeMap(connection, consumeList = []) {
         for (const queueObj of consumeList) {
             const queueName = queueObj.queueName;
             const channel = await connection.createChannel();
@@ -50,21 +51,7 @@ module.exports = class RabbitMq {
         }
     }
 
-    async buildFromPublishMap(connection, publishMap = {}) {
-        if (!Object.keys(publishMap).length) return;
-        await this.createConfirmChannel(connection);
-        for (const queueKey in publishMap) {
-            if (publishMap[queueKey]) {
-                const queueObj = publishMap[queueKey];
-                if (queueObj.assertOptions) {
-                    // Assert Queue
-                    await this.assertionQueue(connection, queueObj);
-                }
-            }
-        }
-    }
-
-    async createConfirmChannel(connection) {
+    async initPublishChaneel(connection) {
         // Create confirm channel for all publishers
         this._publishChannel = await connection.createConfirmChannel();
     }
@@ -84,18 +71,66 @@ module.exports = class RabbitMq {
         await assertChannel.close();
     }
 
-    async send(msg, queueName, parentSpan) {
+    async publish(message, exhnageName, routingKey, parentSpan) {
         let span;
         try {
-            span = this._tracer.startSpan(`${this.constructor.name} - ${this.send.name}`, { childOf: parentSpan });
-            this._logger.log('info', `send messaage ${msg} to ${queueName}`);
-            await this._publishChannel.sendToQueue(queueName, Buffer.from(JSON.stringify(msg)), { persistent: true });
+            span = this._tracer.startSpan(`${this.constructor.name} - ${this.publish.name}`, { childOf: parentSpan });
+            this._logger.logV2('info', this.constructor.name, this.publish.name, 'start');
+            await this._publishChannel.publish(exhnageName, routingKey, Buffer.from(JSON.stringify(message)), { persistent: true });
+            this._logger.logV2('info', this.constructor.name, this.publish.name, 'success');
         } catch (error) {
-            this._logger.log('error', `${this.constructor.name} - ${this.send.name} failed. error: ${error.message}`);
+            this._logger.logV2('error', this.constructor.name, this.publish.name, error.message, { exhnageName, routingKey });
             span.setTag(opentracing.Tags.ERROR, true);
             throw error;
         } finally {
             span.finish();
+        }
+    }
+
+    async register(callback) {
+        try {
+            this._logger.logV2('info', this.constructor.name, this.register.name);
+            for (const queueName in this._consumeMap) {
+                if (Object.prototype.hasOwnProperty.call(this._consumeMap, queueName)) {
+                    const consumeChannel = this._consumeMap[queueName];
+                    consumeChannel.on('error', (error) => {
+                        this._logger.logV2('error', this.constructor.name, this.register.name, error.message);
+                    });
+                    await consumeChannel.consume(
+                        queueName,
+                        (msg) => {
+                            this.handleReceiveMsg(callback, msg, queueName);
+                        },
+                        {
+                            noAck: false,
+                        }
+                    );
+                }
+            }
+            this._logger.logV2('info', this.constructor.name, this.register.name, 'success');
+        } catch (error) {
+            this._logger.logV2('error', this.constructor.name, this.register.name, error.message);
+            throw error;
+        }
+    }
+
+    async handleError(queueName, errorMessage, message) {
+        try {
+            const ackObj = { fields: { deliveryTag: message.fields.deliveryTag } };
+            this._logger.logV2('info', this.constructor.name, this.handleError.name, '', { errorMessage });
+            const isUnRetryableError = this._unRetryableErrors.some((error) => errorMessage.toLowerCase().includes(error.toLowerCase()));
+            if (isUnRetryableError) {
+                // error happen because error from the unfixed error list
+                this._logger.logV2('warn', this.constructor.name, this.handleError.name, `send error queue name with error: ${errorMessage}`);
+                await this.reject(queueName, ackObj);
+            } else {
+                this._logger.logV2('warn', this.constructor.name, this.handleError.name, `start requeue with error: ${errorMessage}`);
+                await this.requeue(queueName, ackObj);
+            }
+            this._logger.logV2('info', this.constructor.name, this.handleError.name, 'success', { errorMessage });
+        } catch (error) {
+            this._logger.logV2('error', this.constructor.name, this.handleError.name, error.message);
+            throw error;
         }
     }
 
@@ -107,8 +142,12 @@ module.exports = class RabbitMq {
         await this._consumeMap[queueName].reject(msg, requeue);
     }
 
-    getPublishQueueNameByKey(key) {
-        return this._config.queueMap.publishMap[key].queueName;
+    getPublisherExchange() {
+        return this._config.publisher.exchangeName;
+    }
+
+    getPublisherRoutingKey(key) {
+        return this._config.publisher.routingKeys[key];
     }
 
     async handleReceiveDone(deliveryTag, queueName, parentSpan) {
@@ -119,6 +158,7 @@ module.exports = class RabbitMq {
             await this._consumeMap[queueName].ack(ackObj);
         } catch (error) {
             this._logger.log('error', `${this.constructor.name} - ${this.handleReceiveDone.name} failed. error: ${error.message}`);
+            throw error;
         } finally {
             span.finish();
         }

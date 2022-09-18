@@ -43,17 +43,18 @@ const app = express();
         app.use(express.json({ limit: '50mb' })); // for parsing application/json
         app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-        oasTools.initialize(app, config).then(() => {
-            app.createServer(app).listen(serverPort, () => console.log("Server started!"));
+        app.use((req, res, next) => {
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, UseCamelCase, x-clientid, Authorization');
+            if (req.method === 'OPTIONS') {
+                res.statusCode = 200;
+                res.end();
+            } else {
+                next();
+            }
+            // Check for token here (optional)
         });
-
-        // oasTools.initialize(app, async (middleware) => {
-        //     // Interpret Swagger resouces and attach metadata to  request - must he first in swagger tools middleware chain
-        //     app.use(middleware.swaggerMetadata());
-        //     // app.use(morgan('combined'));
-
-        //     // validate swagger requests
-        //     app.use(middleware.swaggerValidator());
 
         //     // CORT!!! and OPTIONS handler
         //     app.use((req, res, next) => {

@@ -1,16 +1,17 @@
 const Awilix = require("awilix");
 const config = require("config");
+const HttpService = require('./services/httpService');
 const Logger = require('./services/loggerService');
-const Probe = require("./services/probeService");
 const Tracer = require("./services/tracerService");
+const Probe = require("./services/probeService");
 const pkgJson = require("./package.json");
 
 const RabbitMqService = require("./services/rabbitmqService");
 const ArchiveService = require("./services/archiveService");
 
-const Example1Service = require("./features/example1/example1Service");
-const Example1Handler = require("./features/example1/example1Handler");
-const Example1Archive = require("./features/example1/example1Archive");
+const Example1Service = require("./controllers/example1/example1Service");
+const Example1Logic = require("./controllers/example1/example1Logic");
+const Example1Data = require("./controllers/example1/example1Data");
 
 const container = Awilix.createContainer({
     injectionMode: Awilix.InjectionMode.CLASSIC,
@@ -21,9 +22,6 @@ container.register({
     loggerConfig: Awilix.asValue(config.get('log')),
     swaggerConfig: Awilix.asValue(config.get("swagger")),
     serverConfig: Awilix.asValue(config.get('server')),
-    probeConfig: Awilix.asValue(config.get('probe')),
-    tracerConfig: Awilix.asValue(config.get('tracer')),
-    archiveConfig: Awilix.asValue(config.get('archive')),
     serviceData: Awilix.asValue({
         name: pkgJson.name,
         component: pkgJson.name,
@@ -31,14 +29,15 @@ container.register({
     }),
     // Classes
     example1Service: Awilix.asClass(Example1Service).singleton(),
-    example1Handler: Awilix.asClass(Example1Handler).singleton(),
-    example1Archive: Awilix.asClass(Example1Archive).singleton(),
+    example1Logic: Awilix.asClass(Example1Logic).singleton(),
+    example1Data: Awilix.asClass(Example1Data).inject(() => ({ archiveConfig: config.get('archive') })).singleton(),
     // Vendor classes
-    archiveService: Awilix.asClass(ArchiveService).singleton(),
-    queueService: Awilix.asClass(RabbitMqService).singleton(),
-    logger: Awilix.asClass(Logger).singleton(),
-    probe: Awilix.asClass(Probe).singleton(),
-    tracer: Awilix.asClass(Tracer).singleton(),
+    archiveService: Awilix.asClass(ArchiveService).inject(() => ({ config: config.get('archive') })).singleton(),
+    queueService: Awilix.asClass(RabbitMqService).inject(() => ({ config: config.get('queue') })).singleton(),
+    httpService: Awilix.asClass(HttpService).inject(() => ({ config: config.get('http') })).singleton(),
+    logger: Awilix.asClass(Logger).inject(() => ({ config: config.get('log') })).singleton(),
+    probe: Awilix.asClass(Probe).inject(() => ({ config: config.get('probe') })).singleton(),
+    tracer: Awilix.asClass(Tracer).inject(() => ({ config: config.get('tracer') })).singleton(),
 });
 
 module.exports = container;

@@ -1,0 +1,38 @@
+# swagger: "2.0"
+# info:
+#   version: "1.0.0"
+#   title: 'example-service'
+# host: "localhost:3001"
+# basePath: "/api/v1"
+# paths:
+#   /addexample:
+#     post:
+#       tags:
+#         - "template-service"
+#         - "group-a"
+#       description: "example-route"
+#       x-swagger-router-controller: "exampleRoute"
+#       operationId: "addExample"
+#       parameters:
+#         - name: "userData"
+#           description: "ther request parameter for user data"
+#           in: body
+#           required: true
+#           schema:
+#             $ref: '#/definitions/example'
+#       responses:
+#         200:
+#           description: "name ok"
+#         400:
+#           description: "bad name"
+#         500:
+#           description: "server error"
+
+# definitions:
+#   example:
+#     type: "object"
+#     required:
+#       - "yourname"
+#     properties:
+#       yourname:
+#         type: "string"

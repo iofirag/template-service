@@ -11,7 +11,7 @@
         "nodemon": "nodemon index.js",
         "test": "./node_modules/.bin/mocha --reporter spec ./tests/**/*.js",
         "testx": "./node_modules/.bin/mocha --reporter xunit-file ./tests/**/*.js",
-        "test-build-config": "node test/buildConfigTest.js",
+        "dev-build-config": "node test/buildConfigTest.js",
         "test-build-config-prod": "set NODE_ENV=production&& node services/configCreatorService.js",
         "test-build-config-dev": "set NODE_ENV=development&& node services/configCreatorService.js"
     },
@@ -24,6 +24,7 @@
         "amqplib": "^0.10.3",
         "awilix": "^7.0.2",
         "axios": "^0.26.1",
+        "axios-retry": "^3.2.5",
         "body-parser": "^1.20.0",
         "config": "^3.3.6",
         "cookie-parser": "^1.4.5",
@@ -44,6 +45,7 @@
         "eslint": "^7.28.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-plugin-import": "^2.23.4",
-        "nodemon": "^2.0.7"
+        "nodemon": "^2.0.7",
+        "sinon": "^14.0.0"
     }
 }

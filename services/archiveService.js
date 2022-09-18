@@ -1,10 +1,9 @@
 const { Client } = require('@elastic/elasticsearch');
-const Stopwatch = require('statman-stopwatch');
 const opentracing = require('opentracing');
 
 module.exports = class ArchiveService {
-    constructor(archiveConfig, logger, tracer) {
-        this._config = archiveConfig;
+    constructor(config, logger, tracer) {
+        this._config = config;
         this._client = new Client({
             node: this._config.hosts,
             apiVersion: this._config.apiVersion,
@@ -18,7 +17,6 @@ module.exports = class ArchiveService {
     async createMappingIndexIfNotExist(indexName, typeName, mappingBody, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.createMappingIndexIfNotExist.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -47,8 +45,7 @@ module.exports = class ArchiveService {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }
@@ -57,7 +54,6 @@ module.exports = class ArchiveService {
     async createMapping(indexName, typeName, mappingBody, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.createMapping.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -77,8 +73,7 @@ module.exports = class ArchiveService {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }
