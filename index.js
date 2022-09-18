@@ -44,7 +44,7 @@ const app = express();
         app.get("/api-docs", (req, res) => res.json(oasFile));
 
         const config = {
-            oasFile: 'api/oas.yaml',
+            oasFile: './api/oas.yaml',
             middleware: {
                 validator: {
                     strict: true

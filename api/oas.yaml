@@ -7,12 +7,12 @@ servers:
   - url: example-service/api/v1
 paths:
   /addexample:
-    x-router-controller: example1Controller
     post:
+      x-router-controller: example1Controller
+      operationId: addExample
       tags:
         - "template-service"
       description: "example-route"
-      operationId: addExample
       parameters:
         - $ref: '#/components/parameters/ExampleProp'
       requestBody:
@@ -50,7 +50,7 @@ components:
 
   parameters:
     ExampleProp:
-      name: ExampleProp
+      name: exampleProp
       description: example parameter
       in: header
       required: true
@@ -59,7 +59,7 @@ components:
 
   schemas:
     ExampleProp:
-      description: 'your name'
+      description: 'prop value'
       type: "string"
       
     ExampleResponse:
