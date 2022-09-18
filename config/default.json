@@ -1,5 +1,5 @@
 {
-    "test": "local value",
+    "source": "local value",
     "probe": {},
     "tracer": {},
     "server": {

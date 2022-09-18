@@ -1,7 +1,8 @@
 const opentracing = require("opentracing");
 const Stopwatch = require('statman-stopwatch');
 
-module.exports = class Example1Service {
+
+module.exports = class OrgService {
     constructor(example1Handler, logger, tracer, serviceData) {
         this._handler = example1Handler;
         this._logger = logger;

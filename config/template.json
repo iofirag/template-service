@@ -1,5 +1,5 @@
 {
-    "test": {
+    "source": {
         "key": "/configuration/testservice/test",
         "defaultValue": "generated default-value"
     },

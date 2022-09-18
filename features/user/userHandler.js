@@ -1,7 +1,7 @@
 const opentracing = require('opentracing');
 const Stopwatch = require('statman-stopwatch');
 
-module.exports = class Example1Handler {
+module.exports = class OrgHandler {
     constructor(example1Archive, logger, tracer, serviceData, queueService) {
         this._archive = example1Archive;
         this._logger = logger;
@@ -24,7 +24,7 @@ module.exports = class Example1Handler {
             if (!userData) {
                 throw new Error('empty value');
             }
-            // await this._queueService.sendMessage(userData);
+            await this._queueService.sendMessage(userData);
             // await this._archive.addExample(userData, span);
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
