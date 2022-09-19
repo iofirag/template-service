@@ -45,6 +45,7 @@ const app = express();
 
         const config = {
             oasFile: './api/oas.yaml',
+            // useAnnotations: true,
             middleware: {
                 validator: {
                     strict: true
@@ -63,7 +64,6 @@ const app = express();
             }
         };
         await oasTools.initialize(app, config);
-
         // Start the server
         await probe.start(app, serverPort);
         probe.readyFlag = true;

@@ -1,15 +1,23 @@
 openapi: 3.0.0
 info:
-  version: "1.0.0"
-  title: 'example-service'
-servers:
-  - url: /api/v1
-  - url: example-service/api/v1
+  version: 1.0.0
+  title: Quickstart
+  description: Quickstart for OAS-Tools
+# servers:
+#   - url: /example-service
 paths:
-  /addexample:
+  /api/v1/test:
+    get:
+      x-router-controller: testController
+      operationId: 'testFunction'
+      responses:
+        200:
+          description: the user's address
+
+  /api/v1/addexample:
     x-router-controller: example1Controller
     post:
-      operationId: addExample
+      operationId: 'addExample'
       tags:
         - "template-service"
       description: "example-route"
@@ -52,7 +60,7 @@ components:
     ExampleProp:
       name: exampleProp
       description: example parameter
-      in: header
+      in: query
       required: true
       schema:
         $ref: '#/components/schemas/ExampleProp'

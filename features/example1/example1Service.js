@@ -9,7 +9,7 @@ module.exports = class Example1Service {
     }
 
     async addExample(req, res) {
-        this._logger.logV2('info', this.constructor.name, req.openapi.schema.operationId, 'start');
+        this._logger.logV2('info', this.constructor.name, req.route.path, 'start');
         let result;
         const logObj = {
             isError: false,
@@ -18,16 +18,16 @@ module.exports = class Example1Service {
         const ctx = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, req.headers);
         const span = ctx ? this._tracer.startSpan(this._serviceData.name, { childOf: ctx }) : this._tracer.startSpan(this._serviceData.name);
         try {
-            const userData = req.params.userData;
-            await this._handler.addExample(userData, span);
-            result = userData;
+            const data = req.body;
+            await this._handler.addExample(data, span);
+            result = data;
         } catch (error) {
             span.setTag(opentracing.Tags.ERROR, true);
             logObj.isError = true;
             logObj.msg = error.message;
             res.statusCode = 500;
         } finally {
-            this._logger.logV2(logObj.isError ? 'error' : 'info', this.constructor.name, req.openapi.schema.operationId, logObj.msg);
+            this._logger.logV2(logObj.isError ? 'error' : 'info', this.constructor.name, req.route.path, logObj.msg);
             res.setHeader('Content-Type', 'application/json');
             res.end(result ? JSON.stringify(result) : '');
             span.finish();

@@ -9,7 +9,7 @@ module.exports = class Example1Logic {
         this._queueService = queueService;
     }
 
-    async addExample(userData, parentSpan) {
+    async addExample(value, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
             isError: false,
@@ -19,7 +19,7 @@ module.exports = class Example1Logic {
             childOf: parentSpan,
         });
         try {
-            if (!userData) {
+            if (!value) {
                 throw new Error('empty value');
             }
             // await this._queueService.sendMessage(userData);
