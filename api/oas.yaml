@@ -3,10 +3,11 @@ info:
   version: 1.0.0
   title: Quickstart
   description: Quickstart for OAS-Tools
-# servers:
-#   - url: /example-service
+servers:
+- url: /
+  description: Development server
 paths:
-  /api/v1/test:
+  /test:
     get:
       x-router-controller: testController
       operationId: 'testFunction'
@@ -14,7 +15,7 @@ paths:
         200:
           description: the user's address
 
-  /api/v1/addexample:
+  /addexample:
     x-router-controller: example1Controller
     post:
       operationId: 'addExample'

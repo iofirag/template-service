@@ -171,10 +171,10 @@
     js-yaml "^4.1.0"
     winston "^3.7.2"
 
-"@oas-tools/core@^3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@oas-tools/core/-/core-3.0.1.tgz#7c768a6d193e1fe52ee5fccb3e1e29fcae2c7d82"
-  integrity sha512-OlexDkLp8DZBFw8oQfjCO1IOvnSGw5owJuIWenuNGLOpKeFAwJCiRarJy/i4armXsAaW4RM/KBxUFidn5UPkvQ==
+"@oas-tools/core@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@oas-tools/core/-/core-3.0.2.tgz#67b638c3152eed344559086ee857a92744353d7f"
+  integrity sha512-njRFTkwZgWnZgmJ9xu5tRLL33YyQwFc/EQdZLXArs6ddefH2oqeSP6R9dbzYE2WPmTF5MMdlx1oodO6ceDj8rQ==
   dependencies:
     "@oas-tools/commons" "^1.0.0"
     js-yaml "^3.13.1"
