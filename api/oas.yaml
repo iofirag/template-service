@@ -4,7 +4,7 @@ info:
   title: Quickstart
   description: Quickstart for OAS-Tools
 servers:
-- url: /
+- url: /api/v1
   description: Development server
 paths:
   /test:
