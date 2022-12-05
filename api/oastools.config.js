@@ -11,8 +11,6 @@
 //             url: "./api-docs/oas.yaml",
 //         },
 //         security: {
-//             auth: {
-                
-//             }
+//             auth: {}
 //     }
 // };
