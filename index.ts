@@ -42,7 +42,7 @@ const app: express.Application = express();
         await oasTools.initialize(app, apiConfig);
         console.log('ready')
     //     // Start the server
-    app.listen(3002, ()=> {
+    app.listen(3001, ()=> {
         console.log('server listening on http://localhost:3001')
     })
     //     await probe.start(app, serverPort);
