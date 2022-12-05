@@ -5,7 +5,6 @@ import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import oasTools from '@oas-tools/core'
-// import swaggerUi from 'swagger-ui-express';
 import { container } from "./containerConfig";
 import { TYPES } from './containerTypes';
 
