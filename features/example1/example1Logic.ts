@@ -1,13 +1,15 @@
-const opentracing = require('opentracing');
+import { injectable, inject } from 'inversify';
+import 'reflect-metadata';
+import opentracing from 'opentracing';
+import { TYPES } from '../../containerTypes';
 
-module.exports = class Example1Logic {
-    constructor(example1Data, logger, tracer, serviceData, queueService) {
-        this._archive = example1Data;
-        this._logger = logger;
-        this._tracer = tracer;
-        this._serviceData = serviceData;
-        this._queueService = queueService;
-    }
+@injectable()
+export default class Example1Logic {
+    @inject(TYPES.Example1Data) private _archive: any;
+    private _logger: any;
+    private _tracer: any;
+    private _serviceData: any;
+    private _queueService: any;
 
     async addExample(value, parentSpan) {
         const logObj = {
@@ -30,12 +32,8 @@ module.exports = class Example1Logic {
             logObj.msg = error.message;
             throw error;
         } finally {
-            this._logger.log(
-                logObj.isError ? 'error' : 'info',
-                `${logObj.prefix} - ${logObj.msg}`,
-                span
-            );
+            this._logger.log(logObj.isError ? 'error' : 'info', `${logObj.prefix} - ${logObj.msg}`, span);
             span.finish();
         }
     }
-};
+}

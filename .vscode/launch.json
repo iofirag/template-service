@@ -14,22 +14,13 @@
             "runtimeArgs": ["start"]
         },
         {
-            "name": "Launch Build-config",
+            "name": "Launch Debugging",
             "type": "pwa-node",
             "request": "launch",
             "skipFiles": ["<node_internals>/**"],
             "program": "${workspaceFolder}\\index.js",
             "runtimeExecutable": "yarn",
-            "runtimeArgs": ["build-config"]
+            "runtimeArgs": ["dev"]
         },
-        {
-            "name": "Launch Build-config-start",
-            "type": "pwa-node",
-            "request": "launch",
-            "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}\\index.js",
-            "runtimeExecutable": "yarn",
-            "runtimeArgs": ["build-config-start"]
-        }
     ]
 }

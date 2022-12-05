@@ -3,6 +3,18 @@
     "server": {
         "port": "3001"
     },
+    "api": {
+        "oasFile": "./api/api.yaml",
+        "packageJSON": "./package.json",
+        "middleware": {
+            "validator": {
+                "strict": true
+            },
+            "router": {
+                "controllers": "./controllers"
+            }
+        }
+    },
     "swagger": {
         
     },
@@ -21,7 +33,7 @@
         "level": "debug"
     },
     "http": {},
-    "api": {
+    "3parties": {
         "tmdb": {
             "host": "https://api.themoviedb.org",
             "host2": "https://www.themoviedb.org",

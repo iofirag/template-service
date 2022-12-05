@@ -1,20 +1,19 @@
-const opentracing = require('opentracing');
-const Stopwatch = require('statman-stopwatch');
+import { injectable, inject } from "inversify";
+import "reflect-metadata";
+import opentracing from 'opentracing'
 
-module.exports = class OrgArchive {
-    constructor(archiveService, archiveConfig, logger, tracer, serviceData) {
-        this._archiveService = archiveService;
-        this._config = archiveConfig;
-        this._logger = logger;
-        this._tracer = tracer;
-        this._serviceData = serviceData;
-        this._index = `${this._config.indexPrefix}-${this._config.entitiesIndex.example1}`;
-    }
+@injectable()
+export default class Example1Data {
+    private _archiveService: any;
+    private _archiveConfig: any;
+    private _logger: any;
+    private _tracer: any;
+    private _serviceData: any;
+    private _index: string;
 
     async configure(parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.configure.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -37,8 +36,7 @@ module.exports = class OrgArchive {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }
@@ -47,7 +45,6 @@ module.exports = class OrgArchive {
     async addExample(newValue, parentSpan) {
         const logObj = {
             prefix: `${this.constructor.name} - ${this.addExample.name}`,
-            sw: new Stopwatch(true),
             isError: false,
             msg: 'success',
         };
@@ -63,8 +60,7 @@ module.exports = class OrgArchive {
             this._logger.log(
                 logObj.isError ? 'error' : 'info',
                 `${logObj.prefix} - ${logObj.msg}`,
-                span,
-                `time: ${logObj.sw.stop() / 1000}`
+                span
             );
             span.finish();
         }

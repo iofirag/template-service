@@ -1,12 +1,14 @@
-const opentracing = require("opentracing");
+import { injectable, inject } from "inversify";
+import "reflect-metadata";
+import opentracing from 'opentracing'
+import { TYPES } from "../../containerTypes";
 
-module.exports = class Example1Service {
-    constructor(example1Logic, logger, tracer, serviceData) {
-        this._handler = example1Logic;
-        this._logger = logger;
-        this._tracer = tracer;
-        this._serviceData = serviceData;
-    }
+@injectable()
+export default class Example1Service {
+    @inject(TYPES.Example1Logic) private _handler: any;
+    private _logger: any;
+    private _tracer: any;
+    private _serviceData: any;
 
     async addExample(req, res) {
         this._logger.logV2('info', this.constructor.name, req.route.path, 'start');

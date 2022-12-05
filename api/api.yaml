@@ -10,6 +10,7 @@ paths:
   /test:
     get:
       x-router-controller: testController
+      x-openapi-router-controller: testController
       operationId: 'testFunction'
       responses:
         200:
