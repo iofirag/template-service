@@ -9,3 +9,4 @@ xunit.xml
 sh.exe.stackdump
 bush.exe.stackdump
 config/production.json
+src/controllers/*.js

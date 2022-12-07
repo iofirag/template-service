@@ -1,6 +1,6 @@
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
-import opentracing from 'opentracing';
+import opentracing from 'opentracing'
 import { TYPES } from '../../containerTypes';
 
 @injectable()

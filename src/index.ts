@@ -4,10 +4,9 @@ import yaml from 'js-yaml';
 import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import oasTools from '@oas-tools/core'
+import * as oasTools from '@oas-tools/core'
 import { container } from "./containerConfig";
 import { TYPES } from './containerTypes';
-import path from 'path';
 
 const app: express.Application = express();
 

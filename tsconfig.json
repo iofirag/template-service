@@ -1,23 +1,24 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "lib": [
-        "es6"
-      ],
-      "types": [
-        "reflect-metadata"
-      ],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "experimentalDecorators": true,
-      "emitDecoratorMetadata": true,
-      "esModuleInterop": true,
-      "outDir": "dist",
-      "resolveJsonModule": true
-    },
-    "hooks": [
-      "copy-files"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "es6"
     ],
-    "include": [ "src/**/*" ],
-    "exclude": [ "src/**/*.txt" ],
-  }
+    "types": [
+      "reflect-metadata"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "allowJs": true,
+  },
+  
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [],
+}

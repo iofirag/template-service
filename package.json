@@ -6,9 +6,11 @@
     "scripts": {
         "start": "set NODE_ENV=production&& node app/index.js",
         "---------------------test / dev-------------------": "",
-        "build": "tsc",
+        "build": "rm -rf dist && tsc",
+        "postbuild": "cp dist/controllers/* src/controllers",
         "dev": "set NODE_ENV=development&& ts-node src/index.ts",
         "prod": "set NODE_ENV=production&& node dist/index.js",
+        "------------------ not working -------------------": "",
         "nodemon": "nodemon index.ts",
         "test": "./node_modules/.bin/mocha --reporter spec ./tests/**/*.ts",
         "testx": "./node_modules/.bin/mocha --reporter xunit-file ./tests/**/*.ts"
