@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import oasTools from '@oas-tools/core'
 import { container } from "./containerConfig";
 import { TYPES } from './containerTypes';
+import path from 'path';
 
 const app: express.Application = express();
 
@@ -40,8 +41,7 @@ const app: express.Application = express();
 
         // serve api + ui
         await oasTools.initialize(app, apiConfig);
-        console.log('ready')
-    //     // Start the server
+    // Start the server
     app.listen(3001, ()=> {
         console.log('server listening on http://localhost:3001')
     })

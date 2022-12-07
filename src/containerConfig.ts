@@ -1,11 +1,11 @@
+import * as config from 'config'
 import { Container } from "inversify";
+import path from 'path';
 import { TYPES } from "./containerTypes";
 import Example1Data from "./features/example1/example1Data";
 import Example1Logic from "./features/example1/example1Logic";
 import Example1Service from "./features/example1/example1Service";
-const config = require("config");
 
-// const Awilix = require("awilix");
 // const HttpService = require('./services/httpService');
 // const Logger = require('./services/loggerService');
 // const Tracer = require("./services/tracerService");
@@ -15,22 +15,17 @@ const config = require("config");
 // const RabbitMqService = require("./services/rabbitmqService");
 // const ArchiveService = require("./services/archiveService");
 
-// const Example1Service = require("./features/example1/example1Service");
-// const Example1Logic = require("./features/example1/example1Logic");
-// const Example1Data = require("./features/example1/example1Data");
-// import * as Example1Data from './features/example1/example1Data'
-
-export const container = new Container();
-container.bind<Example1Service>(TYPES.Example1Service).to(Example1Service);
-container.bind<Example1Logic>(TYPES.Example1Logic).to(Example1Logic);
-container.bind<Example1Data>(TYPES.Example1Data).to(Example1Data);
+console.log(config.type)
+export const container: Container = new Container();
+container.bind<Example1Service>(TYPES.Example1Service).to(Example1Service).inSingletonScope();
+container.bind<Example1Logic>(TYPES.Example1Logic).to(Example1Logic).inSingletonScope();
+container.bind<Example1Data>(TYPES.Example1Data).to(Example1Data).inSingletonScope();
+// Values
+config.api.middleware.router.controllers = path.join(__dirname, config.api.middleware.router.controllers) // fix controller path
 container.bind<any>(TYPES.ApiConfig).toConstantValue(config.api);
 
-// const container = Awilix.createContainer({
-//     injectionMode: Awilix.InjectionMode.CLASSIC,
-// });
+
 // container.register({
-//     // Values
 //     source: Awilix.asValue(config.get("source")),
 //     loggerConfig: Awilix.asValue(config.get('log')),
 //     swaggerConfig: Awilix.asValue(config.get("swagger")),
