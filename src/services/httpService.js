@@ -15,7 +15,10 @@ module.exports = class HttpService {
 
     async request(method='GET', pathName, headers = {}, data = {}, span) {
         const headersWithTracing = this.getHeadersWithTracing(span, headers);
-        return this._client.request({ url: pathName, method, headersWithTracing, data });
+        return this._client.request({ url: pathName, method, headers: {
+            'Content-Type': 'application/json',
+			    ...headersWithTracing
+            }, data });
     }
 
     async get({ pathName, headers, params }, span) {
