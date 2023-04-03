@@ -13,7 +13,7 @@ module.exports = class HttpService {
         this._client = axios.create({ baseURL, ...this._config.axiosOptions });
     }
 
-    async request(method, pathName, headers = {}, data = {}, span) {
+    async request(method='GET', pathName, headers = {}, data = {}, span) {
         const headersWithTracing = this.getHeadersWithTracing(span, headers);
         return this._client.request({ url: pathName, method, headersWithTracing, data });
     }
