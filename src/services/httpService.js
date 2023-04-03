@@ -17,7 +17,7 @@ module.exports = class HttpService {
         const headersWithTracing = this.getHeadersWithTracing(span, headers);
         return this._client.request({ url: pathName, method, headers: {
             'Content-Type': 'application/json',
-			    ...headersWithTracing
+		...headersWithTracing
             }, data });
     }
 
