@@ -1,9 +1,14 @@
 example service:
 config, probe, server, Dockerfile, logger, eslint, dependency-injection, nodemon, launch with F5, swagger-ui, yarn, prettier,
 
+before clone run:    
+
+    $ git config --global core.autocrlf false
+
 ## RUN:
     $ yarn run start  
-    navigate to http://localhost:3001/docs/  
+    
+navigate to http://localhost:3001/docs/  
 
 - elastic-service
 - http-service
