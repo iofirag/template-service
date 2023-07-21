@@ -40,6 +40,25 @@ module.exports = class HttpService {
     }
 };
 
+// let proxyNode;
+// let httpsAgent;
+// let httpAgent;
+// const blacklistProxy = new Set();
+
+// export const initProxyNode = () => {
+// 	proxyNode = null;
+// }
+
+// const initProxy = () => {
+//     do {
+//         proxyNode = config.http.proxyList[Utils.getRandomNumber(config.http.proxyList.length)];
+//     } while (blacklistProxy.has(proxyNode.host));
+//     console.log('use proxy:',proxyNode.host);
+//     const proxyUrl = `${proxyNode.protocol}://${proxyNode.auth ? `${proxyNode.auth.username}:${proxyNode.auth.password}@` : ''}${proxyNode.host}:${proxyNode.port}`;
+//     console.log('proxyUrl: ',proxyUrl);
+//     httpsAgent = proxyNode.protocol.toUpperCase().includes('SOCKS') ? new SocksProxyAgent(proxyUrl) : new HttpsProxyAgent(proxyUrl);
+//     httpAgent = proxyNode.protocol.toUpperCase().includes('SOCKS') ? new SocksProxyAgent(proxyUrl) : new HttpProxyAgent(proxyUrl);
+// };
 
 // export const sendHttp = async (reqConfig, cookie=null) => {
 //     try {
