@@ -39,3 +39,45 @@ module.exports = class HttpService {
         return headers;
     }
 };
+
+
+// export const sendHttp = async (reqConfig, cookie=null) => {
+//     try {
+//         config.http.useProxy && config.http.proxyList && !proxyNode && initProxy();
+//         reqConfig = {
+//             ...reqConfig,
+//             // ...(config.http.disableCache && { url: `${reqConfig.url}` }), // &timestamp=${new Date().getTime()}
+//             headers: {
+//                 ...reqConfig.headers,
+//                 // ...(cookie && { 'Cookie': cookie }),
+//                 ...(config.http.disableCache && {
+//                     'Cache-Control': 'no-cache',
+//                     'Pragma': 'no-cache',
+//                     'Expires': '0'
+//                 }),
+//             },
+//             ...(proxyNode && { httpsAgent, httpAgent }),
+//             ...(config.http.timeout && { timeout: config.http.timeout }),
+//         }
+//         return await axios.request(reqConfig);
+//     } catch (error) {
+//         if (['CERT_HAS_EXPIRED', 'DEPTH_ZERO_SELF_SIGNED_CERT', 'ETIMEDOUT'].includes(error.code)) {
+//             console.error('change proxy');
+//             blacklistProxy.add(proxyNode.host);
+//             console.error('added to blacklist', proxyNode.host);
+//             proxyNode = null;
+//             return sendHttp(reqConfig);
+//         } else {
+//             throw error
+//         }
+//     }
+// };
+
+// export const getCookieFromResponse = (res: AxiosResponse) => {
+//     try {
+//         if (!res.headers['set-cookie']) throw new Error('MISSING_AUTHORIZATION_COOKIE');
+//         return res.headers['set-cookie'].join('; ');
+//     } catch (error) {
+//         console.error(error)
+//     }
+// };
